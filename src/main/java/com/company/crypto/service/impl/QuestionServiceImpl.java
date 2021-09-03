@@ -15,11 +15,13 @@ import com.company.crypto.service.QuestionService;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final AuthorizationService authorizationService;
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -69,5 +72,27 @@ public class QuestionServiceImpl implements QuestionService {
         }
         questionRepository.save(question);
         return true;
+    }
+
+    @Override
+    public QuestionDto getNext() throws EntityNotFoundException {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        Question question = questionRepository.findByOrderId(user.getQuestionOrderId())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", user.getQuestionOrderId())));
+        user.setQuestionOrderId(user.getQuestionOrderId() + 1);
+        userRepository.save(user);
+        return QuestionMapper.INSTANCE.mapToDto(question);
+    }
+
+    @Override
+    public QuestionDto answer(Long orderId, Double answer) {
+        Question question = questionRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
+        // todo calculate rate of the answer
+        QuestionDto questionDto = QuestionMapper.INSTANCE.mapToDto(question);
+        questionDto.setRate(0.1);
+        return questionDto;
     }
 }

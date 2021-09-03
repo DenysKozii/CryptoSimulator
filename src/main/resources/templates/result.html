@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Profile')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="bg-light">
+    <div>
+        <h1><small th:text="${question.getRate()}"></small></h1>
+        <p></p>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="col-10 alert alert-primary" role="alert">
+            <img alt="" th:src="@{'data:image/jpeg;base64,'+${question.getImageAnswer()}}" height="150px">
+        </div>
+    </div>
+    <br/><br/>
+    <a th:href="@{/question/next}" class="btn btn-primary">
+        <span>Next</span>
+    </a>
+</div>
+</body>
+<div th:replace="~{common :: js-lb}"></div>
+</html>

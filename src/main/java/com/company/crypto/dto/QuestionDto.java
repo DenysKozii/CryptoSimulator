@@ -29,4 +29,6 @@ public class QuestionDto extends BaseDto {
 
     private String imageAnswer;
 
+    private Double rate;
+
 }

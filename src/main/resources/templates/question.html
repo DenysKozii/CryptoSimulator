@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Profile')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="bg-light">
+    <div>
+        <h1><small th:text="${question.getTitle()}"></small></h1>
+        <p></p>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="col-10 alert alert-primary" role="alert">
+            <img alt="" th:src="@{'data:image/jpeg;base64,'+${question.getImageQuestion()}}" height="150px">
+        </div>
+    </div>
+    <br/><br/>
+    <form th:action="@{/question/answer/{orderId}(orderId = ${question.getOrderId()})}" class="needs-validation" method="post">
+        <div class="form-group">
+            <input type="number" class="form-control" placeholder="price"
+                   name="answer"/>
+        </div>
+        <p></p>
+        <button type="submit" class="btn btn-lg btn-primary btn-block">Answer</button>
+        <br/>
+    </form>
+</div>
+</body>
+<div th:replace="~{common :: js-lb}"></div>
+</html>

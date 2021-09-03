@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Profile')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="bg-light">
+    <div>
+        <h1>Completed!</h1>
+        <p></p>
+    </div>
+    <br/><br/>
+    <a th:href="@{/profile}" class="btn btn-primary">
+        <span>Next</span>
+    </a>
+</div>
+</body>
+<div th:replace="~{common :: js-lb}"></div>
+</html>

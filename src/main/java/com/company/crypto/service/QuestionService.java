@@ -12,4 +12,8 @@ public interface QuestionService {
     List<QuestionDto> getAll();
 
     boolean create(Long orderId, String title, String context, Double answer, MultipartFile imageQuestion, MultipartFile imageAnswer) throws IOException;
+
+    QuestionDto getNext();
+
+    QuestionDto answer(Long orderId, Double answer);
 }

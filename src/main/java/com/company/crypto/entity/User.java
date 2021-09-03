@@ -31,7 +31,11 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(columnDefinition = "INT DEFAULT 0")
     private Double usdt;
+
+    @Column(name = "question_order_id", columnDefinition = "INT DEFAULT 0")
+    private Long questionOrderId;
 
     @Transient
     @ToString.Exclude

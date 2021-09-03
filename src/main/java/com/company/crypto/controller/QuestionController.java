@@ -6,12 +6,10 @@ import com.company.crypto.service.QuestionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -42,11 +40,33 @@ public class QuestionController {
         return "redirect:/question/list";
     }
 
+    @PostMapping("/answer/{orderId}")
+    public String answerQuestion(
+                              @PathVariable Long orderId,
+                              @RequestParam Double answer,
+                              Model model) {
+        QuestionDto question = questionService.answer(orderId, answer);
+        model.addAttribute("question", question);
+        return "result";
+    }
+
     @GetMapping("/list")
     public String getAllQuestions(Model model) {
         List<QuestionDto> questions = questionService.getAll();
         model.addAttribute("questions", questions);
         return "questionsList";
+    }
+
+    @GetMapping("/next")
+    public String nextQuestion(Model model) {
+        try {
+            QuestionDto question = questionService.getNext();
+            model.addAttribute("question", question);
+            return "question";
+        } catch (EntityNotFoundException e){
+            return "completed";
+        }
+
     }
 
 }
