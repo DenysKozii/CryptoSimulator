@@ -18,6 +18,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "questions")
 public class Question extends BaseEntity{
+
+    @NonNull
+    private Long orderId;
+
     @NonNull
     private String title;
 

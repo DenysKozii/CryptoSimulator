@@ -28,7 +28,7 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping(value = {"/profile"})
+    @GetMapping("/profile")
     public String profile(Model model) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
         model.addAttribute("username", username);

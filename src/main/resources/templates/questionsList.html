@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Questions')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="container">
+    <h3>Questions</h3>
+    <br>
+    <a th:href="@{/question}" class="btn btn-primary">
+        <span>Create</span>
+    </a>
+    <br>
+    <br>
+    <br>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Order id</th>
+            <th scope="col">Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="qv,iter : ${questions}">
+            <td th:text="${qv.getOrderId()}"></td>
+            <td th:text="${qv.getTitle()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
     public boolean addUser(UserDto userDto) {
         Optional<User> userFromDb = userRepository.findByUsername(userDto.getUsername());
         User user;
