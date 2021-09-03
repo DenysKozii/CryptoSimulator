@@ -11,6 +11,6 @@ import javax.persistence.Table;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@Table(name = "simulations")
-public class Simulation extends BaseEntity{
+@Table(name = "transactions")
+public class Transaction extends BaseEntity {
 }

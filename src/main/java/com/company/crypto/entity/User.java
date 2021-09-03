@@ -31,8 +31,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    private Double usdt;
+
     @Transient
-    private String confirmPassword;
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
+    private List<Asset> assets = new ArrayList<>();
+
 
     @NonNull
     @ToString.Exclude

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.mapstruct.Named;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -15,8 +14,10 @@ import org.mapstruct.Named;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class UserDto extends BaseDto {
+public class PriceDto extends BaseDto {
 
-    private String username;
+    private String symbol;
+
+    private Double price;
 
 }

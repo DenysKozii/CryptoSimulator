@@ -4,6 +4,7 @@ import com.binance.api.client.BinanceApiWebSocketClient;
 import com.binance.api.client.domain.event.CandlestickEvent;
 import com.binance.api.client.domain.market.CandlestickInterval;
 import com.company.crypto.entity.Price;
+import com.company.crypto.enums.Symbols;
 import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.service.TradingService;
 import lombok.Data;
@@ -44,7 +45,9 @@ public class TradingServiceImpl implements TradingService {
 
     @Override
     public void startTrading() {
-        webSocketClient.onCandlestickEvent(SYMBOL.toLowerCase(), CandlestickInterval.ONE_MINUTE, this::writeResponse);
+        for (Symbols symbols: Symbols.values()) {
+            webSocketClient.onCandlestickEvent(symbols.name().toLowerCase(), CandlestickInterval.ONE_MINUTE, this::writeResponse);
+        }
     }
 
     @Override

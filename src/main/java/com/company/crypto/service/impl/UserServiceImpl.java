@@ -6,6 +6,7 @@ import com.company.crypto.dto.UserProfileDto;
 import com.company.crypto.entity.Role;
 import com.company.crypto.entity.User;
 import com.company.crypto.exception.EntityNotFoundException;
+import com.company.crypto.mapper.UserMapper;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.UserService;
