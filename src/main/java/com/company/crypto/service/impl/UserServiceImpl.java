@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
             user.setUsername(userDto.getUsername());
             user.setPassword(passwordEncoder.encode(userDto.getUsername()));
             user.setUsdt(START_USDT);
+            user.setQuestionOrderId(0L);
             userRepository.save(user);
             for (Symbols symbols: Symbols.values()) {
                 Asset asset = new Asset();
