@@ -5,6 +5,8 @@
 <body>
 <div class="bg-light">
     <div>
+        <h1><small th:text="${question.getTitle()}"></small></h1>
+        <p></p>
         <h1><small th:text="${question.getRate()}"></small></h1>
         <p></p>
     </div>
@@ -12,6 +14,7 @@
         <div class="col-10 alert alert-primary" role="alert">
             <img alt="" th:src="@{'data:image/jpeg;base64,'+${question.getImageAnswer()}}" height="150px">
         </div>
+        <h1><small th:text="${question.getContext()}"></small></h1>
     </div>
     <br/><br/>
     <a th:href="@{/question/next}" class="btn btn-primary">

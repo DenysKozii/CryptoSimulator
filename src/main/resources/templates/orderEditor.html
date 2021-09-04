@@ -8,6 +8,12 @@
     <br>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
+<!--            <form th:action="@{/transaction/order/}" class="needs-validation" method="post">-->
+<!--                <select name="symbol">-->
+<!--                    <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"-->
+<!--                            th:value="${symbol}" th:text="${symbol.getValue()}"></option>-->
+<!--                </select>-->
+<!--            </form>-->
             <form th:action="@{/transaction/order/submit}" class="needs-validation" method="post">
                 <select name="symbol">
                     <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"

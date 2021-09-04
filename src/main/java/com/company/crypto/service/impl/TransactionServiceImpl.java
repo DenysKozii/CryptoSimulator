@@ -99,7 +99,7 @@ public class TransactionServiceImpl implements TransactionService {
         double close = price.getPrice();
         double deltaAmount = amount * close;
         if (amount > price.getMinimum()) {
-            user.setUsdt(user.getUsdt() + deltaAmount * close - deltaAmount * close * TAX);
+            user.setUsdt(user.getUsdt() + deltaAmount - deltaAmount * TAX);
             asset.setAmount(asset.getAmount() - amount);
         }
 
