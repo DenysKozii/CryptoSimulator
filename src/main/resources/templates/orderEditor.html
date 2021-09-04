@@ -8,17 +8,16 @@
     <br>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
-<!--            <form th:action="@{/transaction/order/}" class="needs-validation" method="post">-->
-<!--                <select name="symbol">-->
-<!--                    <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"-->
-<!--                            th:value="${symbol}" th:text="${symbol.getValue()}"></option>-->
-<!--                </select>-->
-<!--            </form>-->
-            <form th:action="@{/transaction/order/submit}" class="needs-validation" method="post">
+            <form th:action="@{/transaction/order/BTCUSDT}" class="needs-validation" method="get">
                 <select name="symbol">
                     <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"
                             th:value="${symbol}" th:text="${symbol.getValue()}"></option>
                 </select>
+                <p></p>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">CHANGE</button>
+                <p></p>
+            </form>
+            <form th:action="@{/transaction/order/submit/{symbol}(symbol = ${symbol})}" class="needs-validation" method="post">
                 <p></p>
                 <div class="form-group">
                     <input type="number" class="form-control" placeholder="Amount"
@@ -34,6 +33,8 @@
                 <button type="submit" class="btn btn-lg btn-primary btn-block">SUBMIT</button>
                 <p></p>
             </form>
+            <p></p>
+            <h4>Symbol = <small th:text="${symbol}"></small></h4>
             <p></p>
             <h4>Price = <small th:text="${price}"></small></h4>
             <p></p>

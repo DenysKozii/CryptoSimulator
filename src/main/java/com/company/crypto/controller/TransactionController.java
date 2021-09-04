@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Controller
 @AllArgsConstructor
@@ -18,15 +19,29 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     private final static String BUY = "buy";
+    private final static String BTCUSDT = "BTCUSDT";
 
-    @GetMapping("/order/{symbol}")
-    public String getOrderEditor(@PathVariable String symbol, Model model) {
-        Double price = transactionService.getPrice(symbol);
+    @GetMapping("/order/{symbolVariable}")
+    public String getOrderEditor(@PathVariable(required = false) String symbolVariable,
+                                 @RequestParam(required = false) String symbol,
+                                 Model model) {
+        Double price;
+        Double currentAsset;
+        if (symbol != null) {
+            price = transactionService.getPrice(symbol);
+            currentAsset = transactionService.getCurrentAsset(symbol);
+        }
+        else {
+            price = transactionService.getPrice(symbolVariable);
+            currentAsset = transactionService.getCurrentAsset(symbolVariable);
+        }
+
         Double available = transactionService.getAvailable();
-        Double currentAsset = transactionService.getCurrentAsset(symbol);
+
         model.addAttribute("price", price);
         model.addAttribute("available", available);
         model.addAttribute("currentAsset", currentAsset);
+        model.addAttribute("symbol", symbol);
         return "orderEditor";
     }
 
@@ -41,8 +56,10 @@ public class TransactionController {
         return "stopEditor";
     }
 
-    @PostMapping("/order/submit")
-    public String buyOrder(@RequestParam String symbol, @RequestParam String order, @RequestParam Double amount) {
+    @PostMapping("/order/submit/{symbol}")
+    public String submitOrder(@PathVariable String symbol,
+                              @RequestParam String order,
+                              @RequestParam Double amount) {
         if (BUY.equals(order))
             transactionService.buy(symbol, amount);
         else
