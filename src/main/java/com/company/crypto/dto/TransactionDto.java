@@ -1,5 +1,6 @@
 package com.company.crypto.dto;
 
+import com.company.crypto.enums.Action;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -24,6 +25,6 @@ public class TransactionDto extends BaseDto {
 
     private Double price;
 
-    private Double rate;
+    private Action action;
 
 }

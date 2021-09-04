@@ -23,13 +23,13 @@ public class UserController {
     private final UserService userService;
     private final ProfilePageService profilePageService;
 
-    @PostMapping("/")
+    @PostMapping
     public String addUser(@Valid UserDto user) {
         userService.addUser(user);
         return "redirect:/profile";
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String login() {
         return "login";
     }
