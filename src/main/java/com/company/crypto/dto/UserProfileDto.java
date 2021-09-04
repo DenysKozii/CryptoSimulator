@@ -19,13 +19,13 @@ public class UserProfileDto {
     private Long id;
 
     private String username;
-
-    private Double total;
-
-    private Double usdt;
-
-    private Double assetsTotal;
-
-    private List<AssetDto> assets;
+//
+//    private Double total;
+//
+//    private Double usdt;
+//
+//    private Double assetsTotal;
+//
+//    private List<AssetDto> assets;
 
 }

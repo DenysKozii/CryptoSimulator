@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final AssetRepository assetRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final ProfilePageService profilePageService;
+//    private final ProfilePageService profilePageService;
 
 
     private final static Double START_USDT = 1000.0;
@@ -76,15 +76,15 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("Invalid Credentials");
         }
 
-        List<AssetDto> assetDtoList = profilePageService.showUserPortfolio(username);
+//        List<AssetDto> assetDtoList = profilePageService.showUserPortfolio(username);
         authorizationService.authorizeUser(user);
         return new UserProfileDto(
                 user.getId(),
-                user.getUsername(),
-                profilePageService.userPortfolioSum(username),
-                user.getUsdt(),
-                profilePageService.showAllOfAssets(username),
-                assetDtoList
+                user.getUsername()
+//                profilePageService.userPortfolioSum(username),
+//                user.getUsdt(),
+//                profilePageService.showAllOfAssets(username),
+//                assetDtoList
         );
     }
 }
