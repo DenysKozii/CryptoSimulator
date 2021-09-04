@@ -2,6 +2,7 @@ package com.company.crypto.service.impl;
 
 import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Price;
+import com.company.crypto.entity.Transaction;
 import com.company.crypto.entity.User;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
@@ -76,8 +77,16 @@ public class TransactionServiceImpl implements TransactionService {
             user.setUsdt(user.getUsdt() - usdt);
             asset.setAmount(asset.getAmount() + deltaAmount);
         }
+        Transaction transaction = new Transaction();
+        transaction.setSymbol(symbol);
+        transaction.setPrice(close);
+        transaction.setAmount(deltaAmount);
+        transaction.setUsdt(usdt);
+        transaction.setUser(user);
+
         assetRepository.save(asset);
         userRepository.save(user);
+        transactionRepository.save(transaction);
         return true;
     }
 
@@ -102,9 +111,16 @@ public class TransactionServiceImpl implements TransactionService {
             user.setUsdt(user.getUsdt() + deltaAmount - deltaAmount * TAX);
             asset.setAmount(asset.getAmount() - amount);
         }
+        Transaction transaction = new Transaction();
+        transaction.setSymbol(symbol);
+        transaction.setPrice(close);
+        transaction.setAmount(deltaAmount);
+        transaction.setUsdt(amount);
+        transaction.setUser(user);
 
         assetRepository.save(asset);
         userRepository.save(user);
+        transactionRepository.save(transaction);
         return true;
     }
 

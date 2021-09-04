@@ -4,7 +4,6 @@
 <div th:replace="~{common :: navbar(game=false)}"></div>
 <body>
 <div class="container">
-    <h3>Stop editor</h3>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
             <a th:href="@{/transaction/order/BTCUSDT}" class="btn btn-primary">
@@ -23,12 +22,12 @@
             <form th:action="@{/transaction/stop/submit/{symbol}(symbol = ${symbol})}" class="needs-validation" method="post">
                 <p></p>
                 <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Stop"
+                    <input type="number" class="form-control" placeholder="Stop" step="0.00001"
                            name="stop"/>
                 </div>
                 <p></p>
                 <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Amount"
+                    <input type="number" class="form-control" placeholder="Amount" step="0.00001"
                            name="amount"/>
                 </div>
                 <p></p>
@@ -42,13 +41,13 @@
                 <p></p>
             </form>
             <p></p>
-            <h4>Symbol = <small th:text="${symbol}"></small></h4>
+            <h5>Symbol = <small th:text="${symbol}"></small></h5>
             <p></p>
-            <h4>Price = <small th:text="${price}"></small></h4>
+            <h5>Price = <small th:text="${price}"></small></h5>
             <p></p>
-            <h4>Available usdt = <small th:text="${available}"></small></h4>
+            <h5>Available usdt = <small th:text="${available}"></small></h5>
             <p></p>
-            <h4>Current asset = <small th:text="${currentAsset}"></small></h4>
+            <h5>Current asset = <small th:text="${currentAsset}"></small></h5>
             <p></p>
         </div>
     </div>

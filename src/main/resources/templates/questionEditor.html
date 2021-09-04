@@ -4,8 +4,6 @@
 <div th:replace="~{common :: navbar(game=false)}"></div>
 <body>
 <div class="container">
-    <h3>Question editor</h3>
-    <br>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
             <form th:action="@{/question/create}" class="needs-validation" method="post" enctype="multipart/form-data">
@@ -19,7 +17,7 @@
                 </div>
                 <h5>Answer</h5>
                 <div class="form-group">
-                    <input type="number" class="form-control" name="answer"/>
+                    <input type="number" class="form-control" name="answer" step="0.00001"/>
                 </div>
                 <p></p>
                 <div class="form-group">
@@ -45,8 +43,6 @@
                                aria-describedby="inputGroupFileAddon01">
                     </div>
                 </div>
-
-
                 <p></p>
                 <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
                 <br/>

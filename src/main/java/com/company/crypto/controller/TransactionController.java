@@ -30,9 +30,11 @@ public class TransactionController {
         if (symbol != null) {
             price = transactionService.getPrice(symbol);
             currentAsset = transactionService.getCurrentAsset(symbol);
+            model.addAttribute("symbol", symbol);
         } else {
             price = transactionService.getPrice(symbolVariable);
             currentAsset = transactionService.getCurrentAsset(symbolVariable);
+            model.addAttribute("symbol", symbolVariable);
         }
 
         Double available = transactionService.getAvailable();
@@ -40,7 +42,6 @@ public class TransactionController {
         model.addAttribute("price", price);
         model.addAttribute("available", available);
         model.addAttribute("currentAsset", currentAsset);
-        model.addAttribute("symbol", symbol);
         return "orderEditor";
     }
 
@@ -66,9 +67,11 @@ public class TransactionController {
         if (symbol != null) {
             price = transactionService.getPrice(symbol);
             currentAsset = transactionService.getCurrentAsset(symbol);
+            model.addAttribute("symbol", symbol);
         } else {
             price = transactionService.getPrice(symbolVariable);
             currentAsset = transactionService.getCurrentAsset(symbolVariable);
+            model.addAttribute("symbol", symbolVariable);
         }
 
         Double available = transactionService.getAvailable();
@@ -76,7 +79,6 @@ public class TransactionController {
         model.addAttribute("price", price);
         model.addAttribute("available", available);
         model.addAttribute("currentAsset", currentAsset);
-        model.addAttribute("symbol", symbol);
         return "stopEditor";
     }
 

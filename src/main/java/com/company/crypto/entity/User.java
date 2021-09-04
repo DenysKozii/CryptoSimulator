@@ -21,8 +21,8 @@ public class User extends BaseEntity implements UserDetails {
     @NonNull
     @Column(unique = true, nullable = false)
     @NotBlank(message = "Must not be empty")
-    @Size(min = 2, max = 20,
-            message = "Length of first name should be between 2 and 20")
+    @Size(min = 2, max = 50,
+            message = "Length of first name should be between 2 and 50")
     private String username;
 
     @NonNull

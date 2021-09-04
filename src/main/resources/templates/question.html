@@ -16,7 +16,7 @@
     <br/><br/>
     <form th:action="@{/question/answer/{orderId}(orderId = ${question.getOrderId()})}" class="needs-validation" method="post">
         <div class="form-group">
-            <input type="number" class="form-control" placeholder="price"
+            <input type="number" class="form-control" placeholder="price" step="0.00001"
                    name="answer"/>
         </div>
         <p></p>
