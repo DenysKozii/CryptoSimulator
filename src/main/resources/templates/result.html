@@ -14,9 +14,10 @@
         <div class="col-10 alert alert-primary" role="alert">
             <img alt="" th:src="@{'data:image/jpeg;base64,'+${question.getImageAnswer()}}" height="150px">
         </div>
-        <h1><small th:text="${question.getContext()}"></small></h1>
     </div>
-    <br/><br/>
+    <p></p>
+    <h1><small th:text="${question.getContext()}"></small></h1>
+    <p></p>
     <a th:href="@{/question/next}" class="btn btn-primary">
         <span>Next</span>
     </a>
