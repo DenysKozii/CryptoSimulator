@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Questions')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Price</th>
+            <th scope="col">USDT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="qv,iter : ${transactions}">
+            <td th:text="${iter.index} + 1"></td>
+            <td th:text="${qv.getRate()}"></td>
+            <td th:text="${qv.getSymbol()}"></td>
+            <td th:text="${qv.getAmount()}"></td>
+            <td th:text="${qv.getPrice()}"></td>
+            <td th:text="${qv.getUsdt()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

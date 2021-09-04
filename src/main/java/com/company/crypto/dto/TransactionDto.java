@@ -24,4 +24,6 @@ public class TransactionDto extends BaseDto {
 
     private Double price;
 
+    private Double rate;
+
 }

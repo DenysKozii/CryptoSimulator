@@ -23,8 +23,9 @@ public class Transaction extends BaseEntity {
 
     private Double price;
 
-    @Enumerated
     private Action action;
+
+    private Double rate;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

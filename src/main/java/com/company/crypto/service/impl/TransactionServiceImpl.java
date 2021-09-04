@@ -1,10 +1,12 @@
 package com.company.crypto.service.impl;
 
+import com.company.crypto.dto.TransactionDto;
 import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Price;
 import com.company.crypto.entity.Transaction;
 import com.company.crypto.entity.User;
 import com.company.crypto.enums.Action;
+import com.company.crypto.mapper.TransactionMapper;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.repository.TransactionRepository;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -135,5 +139,16 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public boolean sellStop(String symbol, Double amount, Double stop) {
         return false;
+    }
+
+    @Override
+    public List<TransactionDto> getAllByUser() {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+        return transactions.stream()
+                .map(TransactionMapper.INSTANCE::mapToDto)
+                .collect(Collectors.toList());
     }
 }

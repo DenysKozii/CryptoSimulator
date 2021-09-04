@@ -5,21 +5,21 @@
 <body>
 <div class="container">
     <p></p>
-    <a th:href="@{/question}" class="btn btn-primary">
-        <span>Create</span>
+    <a th:href="@{/transaction/list}" class="btn btn-primary">
+        <span>My transactions</span>
     </a>
     <p></p>
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Order id</th>
-            <th scope="col">Title</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Username</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="qv,iter : ${questions}">
-            <td th:text="${qv.getOrderId()}"></td>
-            <td th:text="${qv.getTitle()}"></td>
+        <tr th:each="qv,iter : ${users}">
+            <td th:text="${qv.getRate()}"></td>
+            <td th:text="${qv.getUsername()}"></td>
         </tr>
         </tbody>
     </table>

@@ -49,8 +49,6 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Transaction> transactions = new ArrayList<>();
 
-
-
     @NonNull
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
