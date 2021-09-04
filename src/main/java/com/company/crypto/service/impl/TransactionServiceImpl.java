@@ -27,6 +27,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final AssetRepository assetRepository;
     private final PriceRepository priceRepository;
 
+    private final static Double TAX = 0.00075;
+
     @Override
     public Double getAvailable() {
         String username = authorizationService.getProfileOfCurrent().getUsername();
@@ -54,11 +56,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public boolean order(String symbol, Double amount) {
+    public boolean buy(String symbol, Double usdt) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        if (amount > user.getUsdt())
+        if (usdt > user.getUsdt())
             return false;
         Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
                 .orElseThrow(() ->
@@ -67,6 +69,42 @@ public class TransactionServiceImpl implements TransactionService {
         Price price = priceRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol)));
-        return false;
+        double close = price.getPrice();
+        double deltaUSDT = -usdt + usdt * TAX;
+        double deltaAmount = -deltaUSDT / close;
+        if (deltaAmount > price.getMinimum()) {
+            user.setUsdt(user.getUsdt() - usdt);
+            asset.setAmount(asset.getAmount() + deltaAmount);
+        }
+        assetRepository.save(asset);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean sell(String symbol, Double amount) {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
+                                symbol, username)));
+        if (amount > asset.getAmount())
+            return false;
+
+        Price price = priceRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
+                        symbol)));
+        double close = price.getPrice();
+        double deltaAmount = amount * close;
+        if (amount > price.getMinimum()) {
+            user.setUsdt(user.getUsdt() + deltaAmount * close - deltaAmount * close * TAX);
+            asset.setAmount(asset.getAmount() - amount);
+        }
+
+        assetRepository.save(asset);
+        userRepository.save(user);
+        return true;
     }
 }

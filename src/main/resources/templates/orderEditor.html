@@ -8,26 +8,32 @@
     <br>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
-            <form th:action="@{/transaction/order/post}" class="needs-validation" method="post">
+            <form th:action="@{/transaction/order/submit}" class="needs-validation" method="post">
                 <select name="symbol">
                     <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"
                             th:value="${symbol}" th:text="${symbol.getValue()}"></option>
                 </select>
                 <p></p>
                 <div class="form-group">
-                    <input type="number" class="form-control" placeholder="amount"
+                    <input type="number" class="form-control" placeholder="Amount"
                            name="amount"/>
                 </div>
                 <p></p>
-                <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+                <label for="buy">BUY</label>
+                <input id="buy" type="radio" name="order" value="buy"
+                                                checked="checked"/>
+                <label for="buy">SELL</label>
+                <input id="sell" type="radio" name="order" value="sell"/>
+                <p></p>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">SUBMIT</button>
                 <p></p>
             </form>
             <p></p>
-            <h4><small th:text="${price}"></small></h4>
+            <h4>Price = <small th:text="${price}"></small></h4>
             <p></p>
-            <h4><small th:text="${available}"></small></h4>
+            <h4>Available usdt = <small th:text="${available}"></small></h4>
             <p></p>
-            <h4><small th:text="${currentAsset}"></small></h4>
+            <h4>Current asset = <small th:text="${currentAsset}"></small></h4>
             <p></p>
         </div>
     </div>

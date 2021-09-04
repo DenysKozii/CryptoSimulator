@@ -21,4 +21,6 @@ public class Price extends BaseEntity {
     private String symbol;
 
     private Double price;
+
+    private Double minimum;
 }

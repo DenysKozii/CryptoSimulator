@@ -10,5 +10,7 @@ public interface TransactionService {
 
     Double getPrice(String symbol);
 
-    boolean order(String symbol, Double amount);
+    boolean buy(String symbol, Double amount);
+
+    boolean sell(String symbol, Double amount);
 }

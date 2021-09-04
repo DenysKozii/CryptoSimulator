@@ -52,16 +52,13 @@ public class TradingServiceImpl implements TradingService {
 
     @Override
     public void writeResponse(CandlestickEvent candlestickEvent) {
-//        Price price = priceRepository.findBySymbol(candlestickEvent.getSymbol())
-//                .orElseThrow(()->new EntityNotFoundException(String.format("Price with symbol %s not found",
-//                        candlestickEvent.getSymbol())));
-
         String symbol = candlestickEvent.getSymbol();
         double close = Double.parseDouble(candlestickEvent.getClose());
 
         Price price = priceRepository.findBySymbol(symbol)
                 .orElse(new Price(symbol));
         price.setPrice(close);
+        price.setMinimum(Symbols.valueOf(symbol).getMinimum());
         priceRepository.save(price);
     }
 

@@ -1,8 +1,6 @@
 package com.company.crypto.controller;
 
-import com.company.crypto.dto.QuestionDto;
 import com.company.crypto.service.AuthorizationService;
-import com.company.crypto.service.QuestionService;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,9 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -21,9 +17,10 @@ public class TransactionController {
     private final AuthorizationService authorizationService;
     private final TransactionService transactionService;
 
+    private final static String BUY = "buy";
 
-    @GetMapping("/order")
-    public String getOrderEditor(@RequestParam(defaultValue = "BTCUSDT") String symbol, Model model) {
+    @GetMapping("/order/{symbol}")
+    public String getOrderEditor(@PathVariable String symbol, Model model) {
         Double price = transactionService.getPrice(symbol);
         Double available = transactionService.getAvailable();
         Double currentAsset = transactionService.getCurrentAsset(symbol);
@@ -33,25 +30,40 @@ public class TransactionController {
         return "orderEditor";
     }
 
-    @GetMapping("/stop")
-    public String getStopEditor(@RequestParam(defaultValue = "BTCUSDT") String symbol, Model model) {
+    @GetMapping("/stop/{symbol}")
+    public String getStopEditor(@PathVariable String symbol, Model model) {
+        Double price = transactionService.getPrice(symbol);
+        Double available = transactionService.getAvailable();
+        Double currentAsset = transactionService.getCurrentAsset(symbol);
+        model.addAttribute("price", price);
+        model.addAttribute("available", available);
+        model.addAttribute("currentAsset", currentAsset);
         return "stopEditor";
     }
 
-    @PostMapping("/order/post")
-    public String postOrder(@RequestParam String symbol, @RequestParam Double amount) {
-        transactionService.order(symbol, amount);
-        return "redirect:/transaction/order";
+    @PostMapping("/order/submit")
+    public String buyOrder(@RequestParam String symbol, @RequestParam String order, @RequestParam Double amount) {
+        if (BUY.equals(order))
+            transactionService.buy(symbol, amount);
+        else
+            transactionService.sell(symbol, amount);
+        return "redirect:/transaction/order/" + symbol;
+    }
+
+    @PostMapping("/order/sell")
+    public String sellOrder(@RequestParam String symbol, @RequestParam Double amount) {
+        transactionService.sell(symbol, amount);
+        return "redirect:/transaction/order/" + symbol;
     }
 
     @PostMapping("/stop/post")
     public String postStop(
-                              @RequestParam Long orderId,
-                              @RequestParam String title,
-                              @RequestParam String context,
-                              @RequestParam Double answer,
-                              @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
-                              @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
+            @RequestParam Long orderId,
+            @RequestParam String title,
+            @RequestParam String context,
+            @RequestParam Double answer,
+            @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
+            @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
 //        transactionService.create(orderId, title, context, answer, imageQuestion, imageAnswer);
         return "redirect:/transaction/stop";
     }
