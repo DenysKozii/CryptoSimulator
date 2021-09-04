@@ -34,6 +34,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column
     private Double usdt;
 
+    private Double rate;
+
     @Column(name = "question_order_id")
     private Long questionOrderId;
 
