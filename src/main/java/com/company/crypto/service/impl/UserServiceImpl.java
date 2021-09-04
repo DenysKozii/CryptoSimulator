@@ -39,16 +39,16 @@ public class UserServiceImpl implements UserService {
     private final static Double START_USDT = 1000.0;
 
     @Override
-    public boolean addUser(UserDto userDto) {
-        Optional<User> userFromDb = userRepository.findByUsername(userDto.getUsername());
+    public boolean addUser(String username) {
+        Optional<User> userFromDb = userRepository.findByUsername(username);
         User user;
         if (userFromDb.isPresent()) {
             user = userFromDb.get();
         } else {
             user = new User();
             user.setRole(Role.USER);
-            user.setUsername(userDto.getUsername());
-            user.setPassword(passwordEncoder.encode(userDto.getUsername()));
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(username));
             user.setUsdt(START_USDT);
             user.setQuestionOrderId(1L);
             userRepository.save(user);

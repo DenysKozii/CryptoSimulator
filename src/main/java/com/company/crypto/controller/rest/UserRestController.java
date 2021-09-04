@@ -16,27 +16,18 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping
-    public String addUser(@Valid UserDto user) {
-        userService.addUser(user);
-        return "redirect:/profile";
-    }
-
-    @GetMapping
-    public String login() {
-        return "login";
+    public boolean addUser(@Valid String username) {
+        return userService.addUser(username);
     }
 
     @GetMapping("/profile")
-    public String profile(Model model) {
-        UserDto user = userService.getUserProfile();
-        model.addAttribute("user", user);
-        return "profile";
+    public UserDto profile() {
+        return userService.getUserProfile();
     }
 
-    @PostMapping("/profile")
-    public String addUsdt(@RequestParam Double usdt) {
-        userService.addUsdt(usdt);
-        return "redirect:/profile";
+    @PostMapping("/add")
+    public boolean addUsdt(@RequestParam Double usdt) {
+        return userService.addUsdt(usdt);
     }
 
 //    @PostMapping("/registration")

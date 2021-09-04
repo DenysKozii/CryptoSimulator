@@ -14,7 +14,7 @@
         <h3><small>USDT = </small> <small th:text="${user.getUsdt()}"></small></h3>
     </div>
     <div class="container bg-light">
-    <form class="form-inline" method="post">
+    <form th:action="@{/add}" class="form-inline" method="post">
         <input type="number" name="usdt" placeholder="0" class="form-control">
         <button type="submit" class="btn btn-primary">add usdt</button>
     </form>

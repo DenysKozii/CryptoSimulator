@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/statistics")
 public class StatisticsRestController {
-    private final AuthorizationService authorizationService;
+
     private final StatisticsService statisticsService;
 
     @GetMapping
-    public String getStatistics(Model model) {
-        Double pnl = statisticsService.calculatePNL();
-        model.addAttribute("PNL", pnl);
-        return "statistics";
+    public Double calculatePNL() {
+        return statisticsService.calculatePNL();
     }
 
 }

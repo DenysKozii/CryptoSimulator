@@ -16,12 +16,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/price")
 public class PriceRestController {
+
     private final PriceService priceService;
 
     @GetMapping("/list")
-    public String getAllPrices(Model model) {
-        List<PriceDto> prices = priceService.getAll();
-        model.addAttribute("prices", prices);
-        return "pricesList";
+    public List<PriceDto> getAllPrices() {
+        return priceService.getAll();
     }
+
 }

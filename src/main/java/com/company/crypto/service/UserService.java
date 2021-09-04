@@ -5,7 +5,7 @@ import com.company.crypto.dto.UserDto;
 
 public interface UserService {
 
-    boolean addUser(UserDto user);
+    boolean addUser(String username);
 
     boolean addUsdt(Double usdt);
 

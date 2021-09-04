@@ -17,8 +17,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public String addUser(@Valid UserDto user) {
-        userService.addUser(user);
+    public String addUser(@RequestParam String username) {
+        userService.addUser(username);
         return "redirect:/profile";
     }
 
@@ -34,7 +34,7 @@ public class UserController {
         return "profile";
     }
 
-    @PostMapping("/profile")
+    @PostMapping("/add")
     public String addUsdt(@RequestParam Double usdt) {
         userService.addUsdt(usdt);
         return "redirect:/profile";
