@@ -107,4 +107,14 @@ public class TransactionServiceImpl implements TransactionService {
         userRepository.save(user);
         return true;
     }
+
+    @Override
+    public boolean buyStop(String symbol, Double amount, Double stop) {
+        return false;
+    }
+
+    @Override
+    public boolean sellStop(String symbol, Double amount, Double stop) {
+        return false;
+    }
 }

@@ -66,7 +66,6 @@ public class QuestionController {
         } catch (EntityNotFoundException e){
             return "completed";
         }
-
     }
 
 }

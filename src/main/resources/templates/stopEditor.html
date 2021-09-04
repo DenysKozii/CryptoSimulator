@@ -4,14 +4,14 @@
 <div th:replace="~{common :: navbar(game=false)}"></div>
 <body>
 <div class="container">
-    <h3>Order editor</h3>
+    <h3>Stop editor</h3>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
-            <a th:href="@{/transaction/stop/BTCUSDT}" class="btn btn-primary">
-                <span>Stop loss</span>
+            <a th:href="@{/transaction/order/BTCUSDT}" class="btn btn-primary">
+                <span>Order</span>
             </a>
             <p></p>
-            <form th:action="@{/transaction/order/BTCUSDT}" class="needs-validation" method="get">
+            <form th:action="@{/transaction/stop/BTCUSDT}" class="needs-validation" method="get">
                 <select name="symbol">
                     <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"
                             th:value="${symbol}" th:text="${symbol.getValue()}"></option>
@@ -20,7 +20,12 @@
                 <button type="submit" class="btn btn-lg btn-primary btn-block">CHANGE</button>
                 <p></p>
             </form>
-            <form th:action="@{/transaction/order/submit/{symbol}(symbol = ${symbol})}" class="needs-validation" method="post">
+            <form th:action="@{/transaction/stop/submit/{symbol}(symbol = ${symbol})}" class="needs-validation" method="post">
+                <p></p>
+                <div class="form-group">
+                    <input type="number" class="form-control" placeholder="Stop"
+                           name="stop"/>
+                </div>
                 <p></p>
                 <div class="form-group">
                     <input type="number" class="form-control" placeholder="Amount"

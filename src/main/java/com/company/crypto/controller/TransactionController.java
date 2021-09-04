@@ -30,8 +30,7 @@ public class TransactionController {
         if (symbol != null) {
             price = transactionService.getPrice(symbol);
             currentAsset = transactionService.getCurrentAsset(symbol);
-        }
-        else {
+        } else {
             price = transactionService.getPrice(symbolVariable);
             currentAsset = transactionService.getCurrentAsset(symbolVariable);
         }
@@ -45,16 +44,6 @@ public class TransactionController {
         return "orderEditor";
     }
 
-    @GetMapping("/stop/{symbol}")
-    public String getStopEditor(@PathVariable String symbol, Model model) {
-        Double price = transactionService.getPrice(symbol);
-        Double available = transactionService.getAvailable();
-        Double currentAsset = transactionService.getCurrentAsset(symbol);
-        model.addAttribute("price", price);
-        model.addAttribute("available", available);
-        model.addAttribute("currentAsset", currentAsset);
-        return "stopEditor";
-    }
 
     @PostMapping("/order/submit/{symbol}")
     public String submitOrder(@PathVariable String symbol,
@@ -67,22 +56,40 @@ public class TransactionController {
         return "redirect:/transaction/order/" + symbol;
     }
 
-    @PostMapping("/order/sell")
-    public String sellOrder(@RequestParam String symbol, @RequestParam Double amount) {
-        transactionService.sell(symbol, amount);
-        return "redirect:/transaction/order/" + symbol;
+
+    @GetMapping("/stop/{symbolVariable}")
+    public String getStopEditor(@PathVariable(required = false) String symbolVariable,
+                                @RequestParam(required = false) String symbol,
+                                Model model) {
+        Double price;
+        Double currentAsset;
+        if (symbol != null) {
+            price = transactionService.getPrice(symbol);
+            currentAsset = transactionService.getCurrentAsset(symbol);
+        } else {
+            price = transactionService.getPrice(symbolVariable);
+            currentAsset = transactionService.getCurrentAsset(symbolVariable);
+        }
+
+        Double available = transactionService.getAvailable();
+
+        model.addAttribute("price", price);
+        model.addAttribute("available", available);
+        model.addAttribute("currentAsset", currentAsset);
+        model.addAttribute("symbol", symbol);
+        return "stopEditor";
     }
 
-    @PostMapping("/stop/post")
-    public String postStop(
-            @RequestParam Long orderId,
-            @RequestParam String title,
-            @RequestParam String context,
-            @RequestParam Double answer,
-            @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
-            @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
-//        transactionService.create(orderId, title, context, answer, imageQuestion, imageAnswer);
-        return "redirect:/transaction/stop";
+    @PostMapping("/stop/submit/{symbol}")
+    public String submitStop(@PathVariable String symbol,
+                             @RequestParam String order,
+                             @RequestParam Double stop,
+                             @RequestParam Double amount) {
+        if (BUY.equals(order))
+            transactionService.buyStop(symbol, amount, stop);
+        else
+            transactionService.sellStop(symbol, amount, stop);
+        return "redirect:/transaction/stop/" + symbol;
     }
 
 }

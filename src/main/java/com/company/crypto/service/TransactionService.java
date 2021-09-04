@@ -13,4 +13,8 @@ public interface TransactionService {
     boolean buy(String symbol, Double amount);
 
     boolean sell(String symbol, Double amount);
+
+    boolean buyStop(String symbol, Double amount, Double stop);
+
+    boolean sellStop(String symbol, Double amount, Double stop);
 }
