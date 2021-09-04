@@ -1,16 +1,11 @@
 package com.company.crypto.service.impl;
 
-import com.binance.api.client.domain.market.CandlestickInterval;
 import com.company.crypto.dto.AssetDto;
-import com.company.crypto.dto.LoginRequest;
 import com.company.crypto.dto.UserDto;
-import com.company.crypto.dto.UserProfileDto;
 import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Role;
 import com.company.crypto.entity.User;
 import com.company.crypto.enums.Symbols;
-import com.company.crypto.exception.EntityNotFoundException;
-import com.company.crypto.mapper.UserMapper;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
@@ -18,14 +13,12 @@ import com.company.crypto.service.TransactionService;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,7 +41,7 @@ public class UserServiceImpl implements UserService {
         User user;
         if (userFromDb.isPresent()) {
             user = userFromDb.get();
-        } else{
+        } else {
             user = new User();
             user.setRole(Role.USER);
             user.setUsername(userDto.getUsername());
@@ -56,7 +49,7 @@ public class UserServiceImpl implements UserService {
             user.setUsdt(START_USDT);
             user.setQuestionOrderId(1L);
             userRepository.save(user);
-            for (Symbols symbols: Symbols.values()) {
+            for (Symbols symbols : Symbols.values()) {
                 Asset asset = new Asset();
                 asset.setAmount(0.0);
                 asset.setSymbol(symbols.name());
@@ -69,44 +62,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Double userMoneyShower(String username){
+    public Double userMoneyShower(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         return user.getUsdt();
     }
 
-    public List<AssetDto> showUserPortfolio(String username){
-        List<Asset> asset =  assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
-        return asset.stream().filter(asset1 -> asset1.getAmount()>0)
+    public List<AssetDto> showUserPortfolio(String username) {
+        List<Asset> asset = assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
+        return asset.stream().filter(asset1 -> asset1.getAmount() > 0)
                 .map(this::convertToAssetDto).collect(Collectors.toList());
     }
 
     @Transactional
-    public Double userPortfolioSum(String username){
-        List<Asset> asset =  assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
+    public Double userPortfolioSum(String username) {
+        List<Asset> asset = assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
         return asset.stream().mapToDouble(asset1 ->
-                asset1.getAmount()*transactionService.getPrice(asset1.getSymbol())
+                asset1.getAmount() * transactionService.getPrice(asset1.getSymbol())
         ).sum();
     }
 
-    public Double showAllOfAssets(String username){
+    public Double showAllOfAssets(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        return user.getUsdt()+userPortfolioSum(username);
+        return user.getUsdt() + userPortfolioSum(username);
     }
 
     @Transactional
-    public boolean addMoneyToUser(Double money,String username){
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        user.setUsdt(user.getUsdt()+money);
+    public boolean addUsdt(Double usdt) {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        user.setUsdt(user.getUsdt() + usdt);
         userRepository.save(user);
         return true;
     }
 
 
-    private AssetDto convertToAssetDto(Asset asset){
+    private AssetDto convertToAssetDto(Asset asset) {
         return AssetDto.builder()
                 .symbol(asset.getSymbol())
                 .amount(asset.getAmount())
-                .sum(asset.getAmount()* transactionService.getPrice(asset.getSymbol()))
+                .sum(asset.getAmount() * transactionService.getPrice(asset.getSymbol()))
                 .build();
     }
 }

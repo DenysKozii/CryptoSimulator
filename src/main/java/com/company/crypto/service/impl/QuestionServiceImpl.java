@@ -61,11 +61,14 @@ public class QuestionServiceImpl implements QuestionService {
     public boolean create(Long orderId, String title, String context, Double answer, MultipartFile imageQuestion, MultipartFile imageAnswer) throws IOException {
         Optional<Question> questionOptional = questionRepository.findByTitle(title);
         Question question = questionOptional.orElseGet(Question::new);
-        if (orderId <= questionRepository.count()) {
-            changeOrderId(orderId);
-            question.setOrderId(orderId);
-        } else {
-            question.setOrderId(questionRepository.count() + 1);
+        if (!orderId.equals(question.getOrderId())){
+            if (orderId < questionRepository.count()) {
+                changeOrderId(orderId);
+                question.setOrderId(orderId);
+            } else {
+                // todo fix order id update
+                question.setOrderId(questionRepository.count() + 1);
+            }
         }
         question.setTitle(title);
         question.setContext(context);

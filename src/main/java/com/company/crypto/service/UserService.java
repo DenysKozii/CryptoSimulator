@@ -18,5 +18,5 @@ public interface UserService {
 
     Double showAllOfAssets(String username);
 
-    boolean addMoneyToUser(Double money, String username);
+    boolean addUsdt(Double usdt);
 }

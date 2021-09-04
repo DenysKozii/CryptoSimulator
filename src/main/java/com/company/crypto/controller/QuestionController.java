@@ -1,7 +1,6 @@
 package com.company.crypto.controller;
 
 import com.company.crypto.dto.QuestionDto;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.QuestionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,11 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/question")
 public class QuestionController {
-    private final AuthorizationService authorizationService;
+
     private final QuestionService questionService;
 
-
-    @GetMapping()
+    @GetMapping
     public String create() {
         return "questionEditor";
     }
@@ -39,7 +36,6 @@ public class QuestionController {
 
     @PostMapping("/create")
     public String addQuestion(
-//            @Valid QuestionDto question,
             @RequestParam Long orderId,
             @RequestParam String title,
             @RequestParam String context,

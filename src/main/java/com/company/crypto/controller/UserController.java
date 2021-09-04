@@ -20,13 +20,13 @@ public class UserController {
     private final AuthorizationService authorizationService;
     private final UserService userService;
 
-    @PostMapping("/")
+    @PostMapping
     public String addUser(@Valid UserDto user) {
         userService.addUser(user);
         return "redirect:/profile";
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String login() {
         return "login";
     }
@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        List<AssetDto> assetDtoList= userService.showUserPortfolio(username);
+        List<AssetDto> assetDtoList = userService.showUserPortfolio(username);
         model.addAttribute("username", username);
         model.addAttribute("userMoney", userService.userMoneyShower(username));
         model.addAttribute("portfolio", assetDtoList);
@@ -44,9 +44,8 @@ public class UserController {
     }
 
     @PostMapping("/profile")
-    public String addMoney(@RequestParam(value = "addMoney") Double addedMoney){
-        String username = authorizationService.getProfileOfCurrent().getUsername();
-        userService.addMoneyToUser(addedMoney,username);
+    public String addUsdt(@RequestParam Double usdt) {
+        userService.addUsdt(usdt);
         return "redirect:/profile";
     }
 }
