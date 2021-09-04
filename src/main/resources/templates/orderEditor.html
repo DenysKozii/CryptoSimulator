@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common :: header(value='Questions')}"></div>
+<div th:replace="~{common :: navbar(game=false)}"></div>
+<body>
+<div class="container">
+    <h3>Question editor</h3>
+    <br>
+    <div class="py-5 text-center">
+        <div class="col-5 mx-auto">
+            <form th:action="@{/question/create}" class="needs-validation" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Title"
+                           name="title"/>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Answer description"
+                              name="context"></textarea>
+                </div>
+                <h5>Answer</h5>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="answer"/>
+                </div>
+                <h5>orderId</h5>
+                <div class="form-group">
+                    <input type="number" class="form-control" name="orderId"/>
+                </div>
+                <div class="form-group">
+                    <h5>image in question</h5>
+                    <div class="custom-file">
+                        <label class="custom-file-label" for="imageQuestion">Choose file</label>
+                        <input type="file" class="custom-file-input" id="imageQuestion"
+                               name="imageQuestion"
+                               accept="image/jpeg"
+                               aria-describedby="inputGroupFileAddon01">
+                    </div>
+                    <br>
+                    <h5>image in answer</h5>
+                    <div class="custom-file">
+                        <label class="custom-file-label" for="imageAnswer">Choose file</label>
+                        <input type="file" class="custom-file-input" id="imageAnswer"
+                               name="imageAnswer"
+                               accept="image/jpeg"
+                               aria-describedby="inputGroupFileAddon01">
+                    </div>
+                </div>
+
+
+                <p></p>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
+                <br/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

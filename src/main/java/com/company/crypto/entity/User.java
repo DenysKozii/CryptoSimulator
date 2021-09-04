@@ -40,8 +40,15 @@ public class User extends BaseEntity implements UserDetails {
     @Transient
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "asset")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Asset> assets = new ArrayList<>();
+
+    @Transient
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Transaction> transactions = new ArrayList<>();
+
 
 
     @NonNull
