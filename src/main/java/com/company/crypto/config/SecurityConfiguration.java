@@ -32,6 +32,12 @@ public class SecurityConfiguration {
         private final ApplicationExceptionHandler exceptionHandler;
         private final AuthorizationService userService;
 
+        private static final String[] SWAGGER_WHITELIST = {
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html"
+        };
+
         @Bean
         public PasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder();
@@ -48,6 +54,7 @@ public class SecurityConfiguration {
             http
                     .authorizeRequests()
                     .antMatchers("/").permitAll()
+                    .antMatchers(SWAGGER_WHITELIST).permitAll()
                     .anyRequest().authenticated();
             http
                     .rememberMe()
@@ -84,8 +91,14 @@ public class SecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http.requestMatchers()
                     .antMatchers(HttpMethod.GET,
+                            "/api-docs/**",
+                            "/v3/api-docs/**",
+                            "/swagger-resources/**",
+                            "/swagger-ui.html",
+                            "/v2/api-docs",
                             "/js/**",
-                            "/css/**"
+                            "/css/**",
+                            "/webjars/springfox-swagger-ui/**"
                     )
                     .and().httpBasic()
                     .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

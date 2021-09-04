@@ -25,8 +25,6 @@ public class Transaction extends BaseEntity {
 
     private Action action;
 
-    private Double rate;
-
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade= CascadeType.ALL)
