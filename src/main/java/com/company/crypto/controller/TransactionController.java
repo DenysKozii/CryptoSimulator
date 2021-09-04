@@ -1,5 +1,6 @@
 package com.company.crypto.controller;
 
+import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
 import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.TransactionService;
@@ -7,17 +8,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/transaction")
 public class TransactionController {
-    private final AuthorizationService authorizationService;
     private final TransactionService transactionService;
 
     private final static String BUY = "buy";
@@ -29,28 +26,19 @@ public class TransactionController {
         return "transactions";
     }
 
-
     @GetMapping("/order/{symbolVariable}")
     public String getOrderEditor(@PathVariable(required = false) String symbolVariable,
                                  @RequestParam(required = false) String symbol,
                                  Model model) {
-        Double price;
-        Double currentAsset;
+        OrderInfoDto orderInfoDto;
         if (symbol != null) {
-            price = transactionService.getPrice(symbol);
-            currentAsset = transactionService.getCurrentAsset(symbol);
+            orderInfoDto = transactionService.getOrderInfo(symbol);
             model.addAttribute("symbol", symbol);
         } else {
-            price = transactionService.getPrice(symbolVariable);
-            currentAsset = transactionService.getCurrentAsset(symbolVariable);
+            orderInfoDto = transactionService.getOrderInfo(symbolVariable);
             model.addAttribute("symbol", symbolVariable);
         }
-
-        Double available = transactionService.getAvailable();
-
-        model.addAttribute("price", price);
-        model.addAttribute("available", available);
-        model.addAttribute("currentAsset", currentAsset);
+        model.addAttribute("orderInfo", orderInfoDto);
         return "orderEditor";
     }
 

@@ -1,5 +1,6 @@
 package com.company.crypto.service.impl;
 
+import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
 import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Price;
@@ -34,32 +35,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final PriceRepository priceRepository;
 
     private final static Double TAX = 0.00075;
-
-    @Override
-    public Double getAvailable() {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        return user.getUsdt();
-    }
-
-    @Override
-    public Double getCurrentAsset(String symbol) {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        return assetRepository.findFirstByUserAndSymbol(user, symbol)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
-                                symbol, username))).getAmount();
-    }
-
-    @Override
-    public Double getPrice(String symbol) {
-        return priceRepository.findBySymbol(symbol)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
-                        symbol))).getPrice();
-    }
 
     @Override
     public boolean buy(String symbol, Double usdt) {
@@ -150,5 +125,31 @@ public class TransactionServiceImpl implements TransactionService {
         return transactions.stream()
                 .map(TransactionMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderInfoDto getOrderInfo(String symbol) {
+        OrderInfoDto orderInfoDto = new OrderInfoDto();
+
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+
+        Double price = priceRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
+                        symbol)))
+                .getPrice();
+
+        Double amount = assetRepository.findFirstByUserAndSymbol(user, symbol)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
+                                symbol, username)))
+                .getAmount();
+
+        Double availableUsdt = user.getUsdt();
+        orderInfoDto.setSymbol(symbol);
+        orderInfoDto.setPrice(price);
+        orderInfoDto.setAmount(amount);
+        orderInfoDto.setAvailableUsdt(availableUsdt);
+        return orderInfoDto;
     }
 }

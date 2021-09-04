@@ -4,10 +4,12 @@ import com.company.crypto.dto.AssetDto;
 import com.company.crypto.dto.UserDto;
 import com.company.crypto.dto.UserProfileDto;
 import com.company.crypto.entity.Asset;
+import com.company.crypto.entity.Price;
 import com.company.crypto.entity.Role;
 import com.company.crypto.entity.User;
 import com.company.crypto.enums.Symbols;
 import com.company.crypto.repository.AssetRepository;
+import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.TransactionService;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TransactionService transactionService;
+    private final PriceRepository priceRepository;
 
     private final static Double START_USDT = 1000.0;
 
@@ -87,7 +90,10 @@ public class UserServiceImpl implements UserService {
         List<Asset> assets = assetRepository.findByUser(user);
         Double assetsTotal = assets.stream()
                 .mapToDouble(asset ->
-                        asset.getAmount() * transactionService.getPrice(asset.getSymbol()))
+                        asset.getAmount() * priceRepository.findBySymbol(asset.getSymbol())
+                                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
+                                        asset.getSymbol())))
+                                .getPrice())
                 .sum();
 
         userDto.setAssetsTotal(assetsTotal);
@@ -103,12 +109,15 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
-
     private AssetDto convertToAssetDto(Asset asset) {
+        Double price = priceRepository.findBySymbol(asset.getSymbol())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
+                        asset.getSymbol())))
+                .getPrice();
         return AssetDto.builder()
                 .symbol(asset.getSymbol())
                 .amount(asset.getAmount())
-                .sum(asset.getAmount() * transactionService.getPrice(asset.getSymbol()))
+                .sum(asset.getAmount() * price)
                 .build();
     }
 }

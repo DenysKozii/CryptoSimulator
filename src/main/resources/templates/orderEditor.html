@@ -36,13 +36,13 @@
                 <p></p>
             </form>
             <p></p>
-            <h5>Symbol = <small th:text="${symbol}"></small></h5>
+            <h5>Symbol = <small th:text="${orderInfo.getSymbol()}"></small></h5>
             <p></p>
-            <h5>Price = <small th:text="${price}"></small></h5>
+            <h5>Price = <small th:text="${orderInfo.getPrice()}"></small></h5>
             <p></p>
-            <h5>Available usdt = <small th:text="${available}"></small></h5>
+            <h5>Available USDT = <small th:text="${orderInfo.getAvailableUsdt()}"></small></h5>
             <p></p>
-            <h5>Current asset = <small th:text="${currentAsset}"></small></h5>
+            <h5>Current asset amount = <small th:text="${orderInfo.getAmount()}"></small></h5>
             <p></p>
         </div>
     </div>
