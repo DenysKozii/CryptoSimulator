@@ -46,14 +46,24 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
+    private void changeOrderId(Long orderId){
+        if (orderId == questionRepository.count() + 1)
+            return;
+        Question question = questionRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
+        changeOrderId(orderId + 1);
+        question.setOrderId(orderId + 1);
+        questionRepository.save(question);
+    }
+
     @Override
     public boolean create(Long orderId, String title, String context, Double answer, MultipartFile imageQuestion, MultipartFile imageAnswer) throws IOException {
         Question question = new Question();
-        if (orderId != null){
-            // Todo update
+        if (orderId <= questionRepository.count()){
+            changeOrderId(orderId);
             question.setOrderId(orderId);
         } else {
-            question.setOrderId(questionRepository.count());
+            question.setOrderId(questionRepository.count() + 1);
         }
         question.setTitle(title);
         question.setContext(context);
