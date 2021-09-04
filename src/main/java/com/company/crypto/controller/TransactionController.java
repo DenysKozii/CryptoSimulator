@@ -39,13 +39,8 @@ public class TransactionController {
     }
 
     @PostMapping("/order/post")
-    public String postOrder(@RequestParam Long orderId,
-                              @RequestParam String title,
-                              @RequestParam String context,
-                              @RequestParam Double answer,
-                              @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
-                              @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
-//        transactionService.create(orderId, title, context, answer, imageQuestion, imageAnswer);
+    public String postOrder(@RequestParam String symbol, @RequestParam Double amount) {
+        transactionService.order(symbol, amount);
         return "redirect:/transaction/order";
     }
 

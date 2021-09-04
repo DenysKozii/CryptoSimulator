@@ -9,4 +9,6 @@ public interface TransactionService {
     Double getCurrentAsset(String symbol);
 
     Double getPrice(String symbol);
+
+    boolean order(String symbol, Double amount);
 }

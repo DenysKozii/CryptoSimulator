@@ -1,5 +1,7 @@
 package com.company.crypto.service.impl;
 
+import com.company.crypto.entity.Asset;
+import com.company.crypto.entity.Price;
 import com.company.crypto.entity.User;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
@@ -49,5 +51,22 @@ public class TransactionServiceImpl implements TransactionService {
         return priceRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol))).getPrice();
+    }
+
+    @Override
+    public boolean order(String symbol, Double amount) {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        if (amount > user.getUsdt())
+            return false;
+        Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
+                .orElseThrow(() ->
+                        new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
+                                symbol, username)));
+        Price price = priceRepository.findBySymbol(symbol)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
+                        symbol)));
+        return false;
     }
 }

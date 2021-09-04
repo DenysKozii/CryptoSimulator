@@ -4,54 +4,34 @@
 <div th:replace="~{common :: navbar(game=false)}"></div>
 <body>
 <div class="container">
-    <h3>Question editor</h3>
+    <h3>Order editor</h3>
     <br>
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
-            <form th:action="@{/question/create}" class="needs-validation" method="post" enctype="multipart/form-data">
+            <form th:action="@{/transaction/order/post}" class="needs-validation" method="post">
+                <select name="symbol">
+                    <option th:each="symbol : ${T(com.company.crypto.enums.Symbols).values()}"
+                            th:value="${symbol}" th:text="${symbol.getValue()}"></option>
+                </select>
+                <p></p>
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Title"
-                           name="title"/>
+                    <input type="number" class="form-control" placeholder="amount"
+                           name="amount"/>
                 </div>
-                <div class="form-group">
-                    <textarea class="form-control" placeholder="Answer description"
-                              name="context"></textarea>
-                </div>
-                <h5>Answer</h5>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="answer"/>
-                </div>
-                <h5>orderId</h5>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="orderId"/>
-                </div>
-                <div class="form-group">
-                    <h5>image in question</h5>
-                    <div class="custom-file">
-                        <label class="custom-file-label" for="imageQuestion">Choose file</label>
-                        <input type="file" class="custom-file-input" id="imageQuestion"
-                               name="imageQuestion"
-                               accept="image/jpeg"
-                               aria-describedby="inputGroupFileAddon01">
-                    </div>
-                    <br>
-                    <h5>image in answer</h5>
-                    <div class="custom-file">
-                        <label class="custom-file-label" for="imageAnswer">Choose file</label>
-                        <input type="file" class="custom-file-input" id="imageAnswer"
-                               name="imageAnswer"
-                               accept="image/jpeg"
-                               aria-describedby="inputGroupFileAddon01">
-                    </div>
-                </div>
-
-
                 <p></p>
                 <button type="submit" class="btn btn-lg btn-primary btn-block">Submit</button>
-                <br/>
+                <p></p>
             </form>
+            <p></p>
+            <h4><small th:text="${price}"></small></h4>
+            <p></p>
+            <h4><small th:text="${available}"></small></h4>
+            <p></p>
+            <h4><small th:text="${currentAsset}"></small></h4>
+            <p></p>
         </div>
     </div>
+
 </div>
 </body>
 </html>
