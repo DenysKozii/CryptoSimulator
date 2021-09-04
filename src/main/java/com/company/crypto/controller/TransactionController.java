@@ -2,7 +2,6 @@ package com.company.crypto.controller;
 
 import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -46,11 +45,12 @@ public class TransactionController {
     @PostMapping("/order/submit/{symbol}")
     public String submitOrder(@PathVariable String symbol,
                               @RequestParam String order,
+                              @RequestParam Double usdt,
                               @RequestParam Double amount) {
         if (BUY.equals(order))
-            transactionService.buy(symbol, amount);
+            transactionService.buy(symbol, usdt, amount);
         else
-            transactionService.sell(symbol, amount);
+            transactionService.sell(symbol, usdt, amount);
         return "redirect:/transaction/order/" + symbol;
     }
 

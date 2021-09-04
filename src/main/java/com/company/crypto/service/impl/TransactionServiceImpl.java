@@ -37,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final static Double TAX = 0.00075;
 
     @Override
-    public boolean buy(String symbol, Double usdt) {
+    public boolean buy(String symbol, Double usdt, Double amount) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
@@ -72,7 +72,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public boolean sell(String symbol, Double amount) {
+    public boolean sell(String symbol, Double usdt, Double amount) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));

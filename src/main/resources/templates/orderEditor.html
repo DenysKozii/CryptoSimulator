@@ -22,6 +22,9 @@
             <form th:action="@{/transaction/order/submit/{symbol}(symbol = ${symbol})}" class="needs-validation" method="post">
                 <p></p>
                 <div class="form-group">
+                    <input type="number" class="form-control" placeholder="USDT" step="0.00001"
+                           name="amount"/>
+                    <p></p>
                     <input type="number" class="form-control" placeholder="Amount" step="0.00001"
                            name="amount"/>
                 </div>
@@ -29,6 +32,7 @@
                 <label for="buy">BUY</label>
                 <input id="buy" type="radio" name="order" value="buy"
                                                 checked="checked"/>
+                <p></p>
                 <label for="buy">SELL</label>
                 <input id="sell" type="radio" name="order" value="sell"/>
                 <p></p>

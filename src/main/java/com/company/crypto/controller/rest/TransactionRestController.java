@@ -30,12 +30,13 @@ public class TransactionRestController {
 
     @PostMapping("/order/submit/{symbol}")
     public boolean submitOrder(@PathVariable String symbol,
-                              @RequestParam String order,
-                              @RequestParam Double amount) {
+                               @RequestParam String order,
+                               @RequestParam Double usdt,
+                               @RequestParam Double amount) {
         if (BUY.equals(order))
-            return transactionService.buy(symbol, amount);
+            return transactionService.buy(symbol, usdt, amount);
         else
-            return transactionService.sell(symbol, amount);
+            return transactionService.sell(symbol, usdt, amount);
     }
 
 }
