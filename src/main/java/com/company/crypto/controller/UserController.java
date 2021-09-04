@@ -1,10 +1,8 @@
 package com.company.crypto.controller;
 
 import com.company.crypto.dto.AssetDto;
-import com.company.crypto.dto.ProfilePageDto;
 import com.company.crypto.dto.UserDto;
 import com.company.crypto.service.AuthorizationService;
-import com.company.crypto.service.ProfilePageService;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +19,6 @@ import java.util.List;
 public class UserController {
     private final AuthorizationService authorizationService;
     private final UserService userService;
-    private final ProfilePageService profilePageService;
 
     @PostMapping("/")
     public String addUser(@Valid UserDto user) {
@@ -37,19 +34,19 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        List<AssetDto> assetDtoList= profilePageService.showUserPortfolio(username);
+        List<AssetDto> assetDtoList= userService.showUserPortfolio(username);
         model.addAttribute("username", username);
-        model.addAttribute("userMoney", profilePageService.userMoneyShower(username));
+        model.addAttribute("userMoney", userService.userMoneyShower(username));
         model.addAttribute("portfolio", assetDtoList);
-        model.addAttribute("allAssets", profilePageService.showAllOfAssets(username));
-        model.addAttribute("portfolioSummary", profilePageService.userPortfolioSum(username));
+        model.addAttribute("allAssets", userService.showAllOfAssets(username));
+        model.addAttribute("portfolioSummary", userService.userPortfolioSum(username));
         return "profile";
     }
 
     @PostMapping("/profile")
     public String addMoney(@RequestParam(value = "addMoney") Double addedMoney){
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        profilePageService.addMoneyToUser(addedMoney,username);
+        userService.addMoneyToUser(addedMoney,username);
         return "redirect:/profile";
     }
 }
