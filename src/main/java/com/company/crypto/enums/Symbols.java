@@ -7,5 +7,21 @@ public enum Symbols {
     DOGEUSDT,
     BTCUSDT,
     ETCUSDT,
-    XRPUSDT;
+    ETHUSDT,
+    ADAUSDT,
+    BNBUSDT,
+    SOLUSDT,
+    DOTUSDT,
+    UNIUSDT,
+    LTCUSDT,
+    LUNAUSDT,
+    MATICUSDT,
+    XLMUSDT,
+    ATOMUSDT,
+    TRXUSDT,
+    XMRUSDT,
+    XTZUSDT,
+    NEOUSDT,
+    KSMUSDT,
+    XRPUSDT
 }
