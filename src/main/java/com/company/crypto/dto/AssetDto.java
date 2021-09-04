@@ -12,8 +12,12 @@ import lombok.*;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class AssetDto extends BaseDto{
+public class AssetDto extends BaseDto {
+
     private String symbol;
+
     private Double amount;
+
     private Double sum;
+
 }

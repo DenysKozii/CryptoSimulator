@@ -22,7 +22,6 @@ import java.util.Collections;
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private final UserRepository userRepository;
-//    private final ProfilePageService profilePageService;
 
     @Override
     public void authorizeUser(User user) {
@@ -41,14 +40,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
 
-//        List<AssetDto> assetDtoList = profilePageService.showUserPortfolio(user.getUsername());
         return new UserProfileDto(
                 user.getId(),
                 user.getUsername()
-//                profilePageService.userPortfolioSum(user.getUsername()),
-//                user.getUsdt(),
-//                profilePageService.showAllOfAssets(user.getUsername()),
-//                assetDtoList
         );
     }
 

@@ -23,8 +23,8 @@ public class PriceController {
 
     @GetMapping("/list")
     public String getAllPrices(Model model) {
-        List<PriceDto> priceDtoList = priceService.getAll();
-        model.addAttribute("prices", priceDtoList);
+        List<PriceDto> prices = priceService.getAll();
+        model.addAttribute("prices", prices);
         return "pricesList";
     }
 }

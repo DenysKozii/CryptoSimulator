@@ -5,28 +5,23 @@
 <body>
 <div class="bg-light">
     <div class="container bg-light">
-        <h3><small th:text="${username}"></small></h3>
+        <h3><small th:text="${user.getUsername()}"></small></h3>
     </div>
     <div class="container bg-light">
-        <h3><small>Amount of money:</small> <small th:text="${userMoney}"></small></h3>
+        <h3><small>Wallet = </small> <small th:text="${user.getTotal()}"></small></h3>
     </div>
-
+    <div class="container bg-light">
+        <h3><small>USDT = </small> <small th:text="${user.getUsdt()}"></small></h3>
+    </div>
     <div class="container bg-light">
     <form class="form-inline" method="post">
-        <input type="number" name="usdt" placeholder="0" min="100" class="form-control">
-        <br>
+        <input type="number" name="usdt" placeholder="0" class="form-control">
         <button type="submit" class="btn btn-primary">add usdt</button>
     </form>
     </div>
-
-
     <div class="container bg-light">
-        <h3><small>Portfolio sum:</small> <small th:text="${portfolioSummary}"></small></h3>
+        <h3><small>Assets = </small> <small th:text="${user.getAssetsTotal()}"></small></h3>
     </div>
-    <div class="container bg-light">
-        <h3><small>All assets sum:</small> <small th:text="${allAssets}"></small></h3>
-    </div>
-
     <div class="container text-left">
     <table class="table table-hover">
         <thead>
@@ -38,7 +33,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="currency,iter : ${portfolio}">
+        <tr th:each="currency,iter : ${user.getAssets()}">
             <td th:text="${iter.index} + 1"></td>
             <td th:text="${currency.getSymbol()}"></td>
             <td th:text="${currency.getAmount()}"></td>
@@ -47,9 +42,6 @@
         </tbody>
     </table>
     </div>
-
-
-
 </div>
 </body>
 <div th:replace="~{common :: js-lb}"></div>

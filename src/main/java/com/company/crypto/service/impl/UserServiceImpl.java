@@ -2,6 +2,7 @@ package com.company.crypto.service.impl;
 
 import com.company.crypto.dto.AssetDto;
 import com.company.crypto.dto.UserDto;
+import com.company.crypto.dto.UserProfileDto;
 import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Role;
 import com.company.crypto.entity.User;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,31 +64,6 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    @Override
-    public Double userMoneyShower(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        return user.getUsdt();
-    }
-
-    public List<AssetDto> showUserPortfolio(String username) {
-        List<Asset> asset = assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
-        return asset.stream().filter(asset1 -> asset1.getAmount() > 0)
-                .map(this::convertToAssetDto).collect(Collectors.toList());
-    }
-
-    @Transactional
-    public Double userPortfolioSum(String username) {
-        List<Asset> asset = assetRepository.findByUser(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials")));
-        return asset.stream().mapToDouble(asset1 ->
-                asset1.getAmount() * transactionService.getPrice(asset1.getSymbol())
-        ).sum();
-    }
-
-    public Double showAllOfAssets(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        return user.getUsdt() + userPortfolioSum(username);
-    }
-
     @Transactional
     public boolean addUsdt(Double usdt) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
@@ -94,6 +72,35 @@ public class UserServiceImpl implements UserService {
         user.setUsdt(user.getUsdt() + usdt);
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public UserDto getUserProfile() {
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(username);
+        userDto.setUsdt(user.getUsdt());
+
+        List<Asset> assets = assetRepository.findByUser(user);
+        Double assetsTotal = assets.stream()
+                .mapToDouble(asset ->
+                        asset.getAmount() * transactionService.getPrice(asset.getSymbol()))
+                .sum();
+
+        userDto.setAssetsTotal(assetsTotal);
+        userDto.setTotal(assetsTotal + user.getUsdt());
+
+        List<AssetDto> assetDtos = assets.stream()
+                .filter(asset -> asset.getAmount() > 0)
+                .map(this::convertToAssetDto)
+                .sorted(Comparator.comparing(AssetDto::getSum))
+                .collect(Collectors.toList());
+        Collections.reverse(assetDtos);
+        userDto.setAssets(assetDtos);
+        return userDto;
     }
 
 
