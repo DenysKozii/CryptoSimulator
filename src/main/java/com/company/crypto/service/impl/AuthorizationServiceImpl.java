@@ -1,12 +1,10 @@
 package com.company.crypto.service.impl;
 
-import com.company.crypto.dto.AssetDto;
 import com.company.crypto.dto.UserProfileDto;
 import com.company.crypto.entity.User;
 import com.company.crypto.exception.EntityNotFoundException;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
-import com.company.crypto.service.ProfilePageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

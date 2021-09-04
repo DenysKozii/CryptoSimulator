@@ -22,29 +22,39 @@ public class QuestionController {
     private final QuestionService questionService;
 
 
-    @GetMapping
+    @GetMapping()
     public String create() {
+        return "questionEditor";
+    }
+
+    @GetMapping("/{id}")
+    public String updateById(@PathVariable Long id, Model model){
+        QuestionDto questionDto = questionService.getById(id);
+        model.addAttribute("orderId",questionDto.getOrderId());
+        model.addAttribute("title",questionDto.getTitle());
+        model.addAttribute("context",questionDto.getContext());
+        model.addAttribute("answer",questionDto.getAnswer());
         return "questionEditor";
     }
 
     @PostMapping("/create")
     public String addQuestion(
 //            @Valid QuestionDto question,
-                              @RequestParam Long orderId,
-                              @RequestParam String title,
-                              @RequestParam String context,
-                              @RequestParam Double answer,
-                              @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
-                              @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
+            @RequestParam Long orderId,
+            @RequestParam String title,
+            @RequestParam String context,
+            @RequestParam Double answer,
+            @RequestParam(value = "imageQuestion", required = false) MultipartFile imageQuestion,
+            @RequestParam(value = "imageAnswer", required = false) MultipartFile imageAnswer) throws IOException {
         questionService.create(orderId, title, context, answer, imageQuestion, imageAnswer);
         return "redirect:/question/list";
     }
 
     @PostMapping("/answer/{orderId}")
     public String answerQuestion(
-                              @PathVariable Long orderId,
-                              @RequestParam Double answer,
-                              Model model) {
+            @PathVariable Long orderId,
+            @RequestParam Double answer,
+            Model model) {
         QuestionDto question = questionService.answer(orderId, answer);
         model.addAttribute("question", question);
         return "result";
@@ -63,9 +73,15 @@ public class QuestionController {
             QuestionDto question = questionService.getNext();
             model.addAttribute("question", question);
             return "question";
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return "completed";
         }
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteQuestion(@PathVariable Long id) {
+        questionService.delete(id);
+        return "redirect:/question/list";
     }
 
 }

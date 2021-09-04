@@ -14,12 +14,24 @@
         <tr>
             <th scope="col">Order id</th>
             <th scope="col">Title</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="qv,iter : ${questions}">
             <td th:text="${qv.getOrderId()}"></td>
             <td th:text="${qv.getTitle()}"></td>
+            <td>
+                <a th:href="@{/question/delete/{id}(id=${qv.id})}" class="btn btn-primary">
+                   <span> Delete</span>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{/question/{id}(id=${qv.id})}" class="btn btn-primary">
+                    <span>Update</span>
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>

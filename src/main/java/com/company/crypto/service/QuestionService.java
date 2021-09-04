@@ -16,4 +16,8 @@ public interface QuestionService {
     QuestionDto getNext();
 
     QuestionDto answer(Long orderId, Double answer);
+
+    void delete(Long id);
+
+    QuestionDto getById(Long id);
 }

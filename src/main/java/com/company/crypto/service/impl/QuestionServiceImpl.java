@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
-    private void changeOrderId(Long orderId){
+    private void changeOrderId(Long orderId) {
         if (orderId == questionRepository.count() + 1)
             return;
         Question question = questionRepository.findByOrderId(orderId)
@@ -58,8 +59,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public boolean create(Long orderId, String title, String context, Double answer, MultipartFile imageQuestion, MultipartFile imageAnswer) throws IOException {
-        Question question = new Question();
-        if (orderId <= questionRepository.count()){
+        Optional<Question> questionOptional = questionRepository.findByTitle(title);
+        Question question = questionOptional.orElseGet(Question::new);
+        if (orderId <= questionRepository.count()) {
             changeOrderId(orderId);
             question.setOrderId(orderId);
         } else {
@@ -104,5 +106,17 @@ public class QuestionServiceImpl implements QuestionService {
         QuestionDto questionDto = QuestionMapper.INSTANCE.mapToDto(question);
         questionDto.setRate(0.1);
         return questionDto;
+    }
+
+    @Override
+    public void delete(Long id) {
+        questionRepository.deleteById(id);
+    }
+
+    @Override
+    public QuestionDto getById(Long id) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Question with id = %s not found!", id)));
+        return QuestionMapper.INSTANCE.mapToDto(question);
     }
 }

@@ -10,4 +10,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, Pagin
 
     Optional<Question> findByOrderId(Long orderId);
 
+    Optional<Question> findByTitle(String title);
 }
