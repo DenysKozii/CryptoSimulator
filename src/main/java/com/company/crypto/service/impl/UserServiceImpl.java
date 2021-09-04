@@ -1,6 +1,7 @@
 package com.company.crypto.service.impl;
 
 import com.binance.api.client.domain.market.CandlestickInterval;
+import com.company.crypto.dto.AssetDto;
 import com.company.crypto.dto.LoginRequest;
 import com.company.crypto.dto.UserDto;
 import com.company.crypto.dto.UserProfileDto;
@@ -13,6 +14,7 @@ import com.company.crypto.mapper.UserMapper;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
+import com.company.crypto.service.ProfilePageService;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final ProfilePageService profilePageService;
+
 
     private final static Double START_USDT = 1000.0;
 
@@ -59,5 +65,26 @@ public class UserServiceImpl implements UserService {
         }
         authorizationService.authorizeUser(user);
         return true;
+    }
+
+    @Override
+    public UserProfileDto loginUser(LoginRequest request) {
+        String username = request.getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Invalid Credentials"));
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new EntityNotFoundException("Invalid Credentials");
+        }
+
+        List<AssetDto> assetDtoList = profilePageService.showUserPortfolio(username);
+        authorizationService.authorizeUser(user);
+        return new UserProfileDto(
+                user.getId(),
+                user.getUsername(),
+                profilePageService.userPortfolioSum(username),
+                user.getUsdt(),
+                profilePageService.showAllOfAssets(username),
+                assetDtoList
+        );
     }
 }

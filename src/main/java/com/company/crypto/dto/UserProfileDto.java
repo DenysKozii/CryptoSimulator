@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +19,13 @@ public class UserProfileDto {
     private Long id;
 
     private String username;
+
+    private Double total;
+
+    private Double usdt;
+
+    private Double assetsTotal;
+
+    private List<AssetDto> assets;
 
 }

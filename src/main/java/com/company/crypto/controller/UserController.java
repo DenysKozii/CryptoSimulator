@@ -37,7 +37,7 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        List<AssetDto> assetDtoList= profilePageService.showUserPortfolio(username);
+        List<AssetDto> assetDtoList = profilePageService.showUserPortfolio(username);
         model.addAttribute("username", username);
         model.addAttribute("userMoney", profilePageService.userMoneyShower(username));
         model.addAttribute("portfolio", assetDtoList);
@@ -47,9 +47,9 @@ public class UserController {
     }
 
     @PostMapping("/profile")
-    public String addMoney(@RequestParam(value = "addMoney") Double addedMoney){
+    public String addMoney(@RequestParam(value = "addMoney") Double addedMoney) {
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        profilePageService.addMoneyToUser(addedMoney,username);
+        profilePageService.addMoneyToUser(addedMoney, username);
         return "redirect:/profile";
     }
 }
