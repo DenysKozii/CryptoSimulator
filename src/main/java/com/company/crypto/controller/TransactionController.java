@@ -45,8 +45,8 @@ public class TransactionController {
     @PostMapping("/order/submit/{symbol}")
     public String submitOrder(@PathVariable String symbol,
                               @RequestParam String order,
-                              @RequestParam Double usdt,
-                              @RequestParam Double amount) {
+                              @RequestParam(defaultValue = "0.0") Double usdt,
+                              @RequestParam(defaultValue = "0.0") Double amount) {
         if (BUY.equals(order))
             transactionService.buy(symbol, usdt, amount);
         else

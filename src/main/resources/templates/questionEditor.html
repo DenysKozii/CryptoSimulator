@@ -7,6 +7,7 @@
     <div class="py-5 text-center">
         <div class="col-5 mx-auto">
             <form th:action="@{/question/create}" class="needs-validation" method="post" enctype="multipart/form-data">
+                <h5>Title</h5>
                 <div class="form-group">
                     <input type="text" class="form-control" th:value="${title}"
                            name="title"/>
@@ -20,6 +21,7 @@
                     <input type="number" class="form-control" th:value="${answer}" name="answer" step="0.00001"/>
                 </div>
                 <p></p>
+                <h5>Order id</h5>
                 <div class="form-group">
                     <input type="number" class="form-control" th:value="${orderId}"
                            name="orderId"/>

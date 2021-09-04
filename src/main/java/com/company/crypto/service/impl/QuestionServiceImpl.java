@@ -1,24 +1,17 @@
 package com.company.crypto.service.impl;
 
 import com.company.crypto.dto.QuestionDto;
-import com.company.crypto.dto.UserDto;
-import com.company.crypto.entity.Price;
 import com.company.crypto.entity.Question;
-import com.company.crypto.entity.Role;
 import com.company.crypto.entity.User;
-import com.company.crypto.mapper.PriceMapper;
 import com.company.crypto.mapper.QuestionMapper;
 import com.company.crypto.repository.QuestionRepository;
 import com.company.crypto.repository.UserRepository;
 import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.QuestionService;
-import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +29,8 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
+    private final static Double MAX_RATE = 100.0;
+    private final static Double DELIMITER = 0.7;
 
     @Override
     public List<QuestionDto> getAll() {
@@ -61,7 +56,7 @@ public class QuestionServiceImpl implements QuestionService {
     public boolean create(Long orderId, String title, String context, Double answer, MultipartFile imageQuestion, MultipartFile imageAnswer) throws IOException {
         Optional<Question> questionOptional = questionRepository.findByTitle(title);
         Question question = questionOptional.orElseGet(Question::new);
-        if (!orderId.equals(question.getOrderId())){
+        if (!orderId.equals(question.getOrderId())) {
             if (orderId < questionRepository.count()) {
                 changeOrderId(orderId);
                 question.setOrderId(orderId);
@@ -105,9 +100,11 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDto answer(Long orderId, Double answer) {
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
-        // todo calculate rate of the answer
         QuestionDto questionDto = QuestionMapper.INSTANCE.mapToDto(question);
-        questionDto.setRate(0.1);
+        if (answer.equals(question.getAnswer()))
+            questionDto.setRate(MAX_RATE);
+        else
+            questionDto.setRate(Math.min(MAX_RATE, (question.getAnswer() / Math.abs(answer - question.getAnswer())) / DELIMITER));
         return questionDto;
     }
 

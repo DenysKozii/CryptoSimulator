@@ -1,10 +1,7 @@
 package com.company.crypto.controller.rest;
 
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.StatisticsService;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
