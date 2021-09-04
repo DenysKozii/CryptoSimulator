@@ -10,10 +10,23 @@
     <div class="container bg-light">
         <h3><small>Amount of money:</small> <small th:text="${userMoney}"></small></h3>
     </div>
+
+    <div class="container bg-light">
+    <form class="form-inline" method="post">
+        <input type="number" name="addMoney" placeholder="0" min="100" class="form-control">
+        <button type="submit" class="btn btn-primary">add money</button>
+    </form>
+    </div>
+
+
     <div class="container bg-light">
         <h3><small>Portfolio sum:</small> <small th:text="${portfolioSummary}"></small></h3>
     </div>
+    <div class="container bg-light">
+        <h3><small>All assets sum:</small> <small th:text="${allAssets}"></small></h3>
+    </div>
 
+    <div class="container text-left">
     <table class="table table-hover">
         <thead>
         <tr>
@@ -32,7 +45,7 @@
         </tr>
         </tbody>
     </table>
-
+    </div>
 
 
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -40,7 +41,15 @@ public class UserController {
         model.addAttribute("username", username);
         model.addAttribute("userMoney", profilePageService.userMoneyShower(username));
         model.addAttribute("portfolio", assetDtoList);
+        model.addAttribute("allAssets", profilePageService.showAllOfAssets(username));
         model.addAttribute("portfolioSummary", profilePageService.userPortfolioSum(username));
         return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String addMoney(@RequestParam(value = "addMoney") Double addedMoney){
+        String username = authorizationService.getProfileOfCurrent().getUsername();
+        profilePageService.addMoneyToUser(addedMoney,username);
+        return "redirect:/profile";
     }
 }
