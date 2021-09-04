@@ -3,10 +3,7 @@ package com.company.crypto.controller.rest;
 import com.company.crypto.dto.UserDto;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -16,8 +13,9 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping
-    public boolean addUser(@Valid String username) {
-        return userService.addUser(username);
+    public UserDto addUser(@RequestParam String username) {
+        userService.addUser(username);
+        return userService.getUserProfile();
     }
 
     @GetMapping("/profile")
@@ -26,8 +24,9 @@ public class UserRestController {
     }
 
     @PostMapping("/add")
-    public boolean addUsdt(@RequestParam Double usdt) {
-        return userService.addUsdt(usdt);
+    public UserDto addUsdt(@RequestParam Double usdt) {
+        userService.addUsdt(usdt);
+        return userService.getUserProfile();
     }
 
 //    @PostMapping("/registration")

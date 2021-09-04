@@ -28,8 +28,8 @@ public class TransactionRestController {
         return transactionService.getOrderInfo(symbol);
     }
 
-    @PostMapping("/order/submit/{symbol}")
-    public boolean submitOrder(@PathVariable String symbol,
+    @PostMapping("/order/submit")
+    public boolean submitOrder(@RequestParam String symbol,
                                @RequestParam String order,
                                @RequestParam Double usdt,
                                @RequestParam Double amount) {

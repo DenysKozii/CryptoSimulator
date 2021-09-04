@@ -28,7 +28,7 @@ public class TradingServiceImpl implements TradingService {
     @Override
     public void saveResponse(CandlestickEvent candlestickEvent) {
         String symbol = candlestickEvent.getSymbol();
-        double close = Double.parseDouble(candlestickEvent.getClose());
+        Double close = Double.parseDouble(candlestickEvent.getClose());
 
         Price price = priceRepository.findBySymbol(symbol)
                 .orElse(new Price(symbol));
