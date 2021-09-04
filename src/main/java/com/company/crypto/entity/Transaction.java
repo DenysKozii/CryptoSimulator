@@ -1,5 +1,6 @@
 package com.company.crypto.entity;
 
+import com.company.crypto.enums.Action;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class Transaction extends BaseEntity {
     private Double amount;
 
     private Double price;
+
+    @Enumerated
+    private Action action;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

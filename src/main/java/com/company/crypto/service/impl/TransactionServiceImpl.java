@@ -4,6 +4,7 @@ import com.company.crypto.entity.Asset;
 import com.company.crypto.entity.Price;
 import com.company.crypto.entity.Transaction;
 import com.company.crypto.entity.User;
+import com.company.crypto.enums.Action;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.repository.TransactionRepository;
@@ -82,6 +83,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setPrice(close);
         transaction.setAmount(deltaAmount);
         transaction.setUsdt(usdt);
+        transaction.setAction(Action.BUY);
         transaction.setUser(user);
 
         assetRepository.save(asset);
@@ -114,8 +116,9 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction();
         transaction.setSymbol(symbol);
         transaction.setPrice(close);
-        transaction.setAmount(deltaAmount);
-        transaction.setUsdt(amount);
+        transaction.setAmount(amount);
+        transaction.setUsdt(deltaAmount);
+        transaction.setAction(Action.SELL);
         transaction.setUser(user);
 
         assetRepository.save(asset);
