@@ -1,13 +1,16 @@
 package com.company.crypto.config;
 
 import com.company.crypto.exception.ApplicationExceptionHandler;
+import com.company.crypto.jwt.JwtFilter;
 import com.company.crypto.service.AuthorizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,9 +21,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +39,8 @@ public class SecurityConfiguration {
     public static class FormLoginAuthentication extends WebSecurityConfigurerAdapter {
         private final ApplicationExceptionHandler exceptionHandler;
         private final AuthorizationService userService;
+        @Autowired
+        private JwtFilter jwtFilter;
 
         private static final String[] SWAGGER_WHITELIST = {
                 "/v3/api-docs/**",
@@ -52,35 +62,38 @@ public class SecurityConfiguration {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
+                    .cors()
+                    .and()
+                    .httpBasic().disable()
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
                     .authorizeRequests()
-                    .antMatchers("/", "/api/v1/login").permitAll()
+                    .antMatchers("/", "/login", "/registration**","/googleLogin", "/api/v1/login").permitAll()
                     .antMatchers(SWAGGER_WHITELIST).permitAll()
-                    .anyRequest().authenticated();
-            http
-                    .rememberMe()
-                    .userDetailsService(userDetailsService())
-                    .rememberMeParameter("rememberMe")
-                    .rememberMeCookieName("JSESSION_REMEMBER_ME");
-            http
+                    .anyRequest().authenticated()
+                    .and()
                     .logout()
-                    .logoutUrl("/logout")
-                    .deleteCookies("JSESSIONID")
-                    .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
-                        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-                    })
-                    .invalidateHttpSession(true);
-            http
-                    .csrf().disable();
-            http
+                    .permitAll()
+                    .and()
                     .exceptionHandling()
-                    .defaultAuthenticationEntryPointFor(
-                            getRestAuthenticationEntryPoint(),
-                            new AntPathRequestMatcher("/**"));
+                    .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/access-denied"))
+                    .and()
+                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            http.headers().frameOptions().disable();
         }
+    }
 
-        private AuthenticationEntryPoint getRestAuthenticationEntryPoint() {
-            return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
-        }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Order(1)

@@ -1,8 +1,15 @@
 package com.company.crypto.controller.rest;
 
+import com.company.crypto.dto.AddUsdtDto;
+import com.company.crypto.dto.UserRequest;
 import com.company.crypto.dto.UserDto;
+import com.company.crypto.jwt.JwtProvider;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,12 +19,17 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
 public class UserRestController {
+
     private final UserService userService;
 
+    private final JwtProvider jwtProvider;
+
     @PostMapping("/login")
-    public UserDto addUser(@RequestParam String username) {
-        userService.addUser(username);
-        return userService.getUserProfile();
+    public ResponseEntity<String> login(@RequestBody UserRequest loginRequest) {
+        userService.login(loginRequest.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(jwtProvider.generateToken(loginRequest.getUsername()));
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
     @GetMapping("/profile")
@@ -30,9 +42,9 @@ public class UserRestController {
         return userService.getRatingList();
     }
 
-    @PostMapping("/add")
-    public UserDto addUsdt(@RequestParam Double usdt) {
-        userService.addUsdt(usdt);
+    @PostMapping("/add/usdt")
+    public UserDto addUsdt(@RequestBody AddUsdtDto usdt) {
+        userService.addUsdt(usdt.getUsdt());
         return userService.getUserProfile();
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    boolean addUser(String username);
+    boolean login(String username);
 
     boolean addUsdt(Double usdt);
 

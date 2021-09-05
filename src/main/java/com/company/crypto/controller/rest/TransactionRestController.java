@@ -1,13 +1,16 @@
 package com.company.crypto.controller.rest;
 
+import com.company.crypto.dto.OrderDto;
 import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
+import com.company.crypto.dto.UserRequest;
 import com.company.crypto.enums.Action;
 import com.company.crypto.enums.Symbols;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,8 +24,8 @@ public class TransactionRestController {
     private final static String BTCUSDT = "BTCUSDT";
 
     @GetMapping("/list")
-    public List<TransactionDto> getUserTransactions(@RequestParam(required = false) String username) {
-        return transactionService.getAllByUser(username);
+    public List<TransactionDto> getUserTransactions(@RequestBody UserRequest user) {
+        return transactionService.getAllByUser(user.getUsername());
     }
 
     @GetMapping("/order")
@@ -31,25 +34,19 @@ public class TransactionRestController {
     }
 
     @PostMapping("/order/submit")
-    public boolean submitOrder(@RequestParam Symbols symbol,
-                               @RequestParam Action order,
-                               @RequestParam(required = false) Double usdt,
-                               @RequestParam(required = false) Double amount) {
-        if (Action.BUY.equals(order))
-            return transactionService.buy(symbol.getValue(), usdt, amount);
+    public boolean submitOrder(@Valid OrderDto order) {
+        if (Action.BUY.equals(order.getOrder()))
+            return transactionService.buy(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
         else
-            return transactionService.sell(symbol.getValue(), usdt, amount);
+            return transactionService.sell(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
     }
 
     @PostMapping("/stop/submit")
-    public boolean submitStop(@RequestParam String symbol,
-                              @RequestParam Action order,
-                              @RequestParam(required = false) Double usdt,
-                              @RequestParam(required = false) Double amount) {
-        if (Action.BUY.equals(order))
-            return transactionService.buy(symbol, usdt, amount);
+    public boolean submitStop(@Valid OrderDto order) {
+        if (Action.BUY.equals(order.getOrder()))
+            return transactionService.buy(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
         else
-            return transactionService.sell(symbol, usdt, amount);
+            return transactionService.sell(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
     }
 
 }

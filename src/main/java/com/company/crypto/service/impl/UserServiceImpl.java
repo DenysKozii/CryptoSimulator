@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     private final static Double START_USDT = 1000.0;
 
     @Override
-    public boolean addUser(String username) {
+    public boolean login(String username) {
         Optional<User> userFromDb = userRepository.findByUsername(username);
         log.info(String.format("Added user with %s username", username));
         User user;

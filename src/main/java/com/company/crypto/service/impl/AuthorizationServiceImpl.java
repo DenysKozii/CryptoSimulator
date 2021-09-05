@@ -49,15 +49,10 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info(String.format("Loaded user with username %s ", username));
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
+        return userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User with username %s not found!", username))
         );
-
-        return org.springframework.security.core.userdetails.User.withUsername(user.getId().toString())
-                .password(user.getPassword())
-                .authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString())))
-                .build();
     }
 }

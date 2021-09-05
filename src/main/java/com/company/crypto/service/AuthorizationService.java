@@ -11,6 +11,6 @@ public interface AuthorizationService {
 
     UserProfileDto getProfileOfCurrent();
 
-    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    User loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }
