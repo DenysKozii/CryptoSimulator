@@ -3,6 +3,7 @@ package com.company.crypto.controller;
 import com.company.crypto.dto.QuestionDto;
 import com.company.crypto.service.QuestionService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@Slf4j
 @RequestMapping("/question")
 public class QuestionController {
 
@@ -21,11 +23,13 @@ public class QuestionController {
 
     @GetMapping
     public String create() {
+        log.info("Displayed page for creating questions");
         return "questionEditor";
     }
 
     @GetMapping("/{id}")
     public String updateById(@PathVariable Long id, Model model){
+        log.info("Displayed page for creating questions");
         QuestionDto questionDto = questionService.getById(id);
         model.addAttribute("orderId",questionDto.getOrderId());
         model.addAttribute("title",questionDto.getTitle());
@@ -51,6 +55,7 @@ public class QuestionController {
             @PathVariable Long orderId,
             @RequestParam Double answer,
             Model model) {
+        log.info("Displayed page with question result");
         QuestionDto question = questionService.answer(orderId, answer);
         model.addAttribute("question", question);
         return "result";
@@ -58,6 +63,7 @@ public class QuestionController {
 
     @GetMapping("/list")
     public String getAllQuestions(Model model) {
+        log.info("Displayed page with questions list");
         List<QuestionDto> questions = questionService.getAll();
         model.addAttribute("questions", questions);
         return "questionsList";
@@ -66,10 +72,12 @@ public class QuestionController {
     @GetMapping("/next")
     public String nextQuestion(Model model) {
         try {
+            log.info("Displayed page with question");
             QuestionDto question = questionService.getNext();
             model.addAttribute("question", question);
             return "question";
         } catch (EntityNotFoundException e) {
+            log.info("Displayed completed question page");
             return "completed";
         }
     }

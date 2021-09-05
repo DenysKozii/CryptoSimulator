@@ -34,6 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionDto> getAll() {
+        log.info("Showed all questions");
         List<Question> questions = questionRepository.findAll().stream()
                 .sorted(Comparator.comparing(Question::getOrderId))
                 .collect(Collectors.toList());
@@ -48,6 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
         changeOrderId(orderId + 1);
+        log.info("Changed order id to " + orderId+1);
         question.setOrderId(orderId + 1);
         questionRepository.save(question);
     }
@@ -80,6 +82,7 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setImageAnswer(Base64.getEncoder().encodeToString(imageAnswer.getBytes()));
             }
         }
+        log.info("Created new question with title " + title);
         questionRepository.save(question);
         return true;
     }
@@ -93,11 +96,13 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", user.getQuestionOrderId())));
         user.setQuestionOrderId(user.getQuestionOrderId() + 1);
         userRepository.save(user);
+        log.info("Showed next question with title " + question.getTitle());
         return QuestionMapper.INSTANCE.mapToDto(question);
     }
 
     @Override
     public QuestionDto answer(Long orderId, Double answer) {
+        log.info("Answer = " + answer);
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
         QuestionDto questionDto = QuestionMapper.INSTANCE.mapToDto(question);
@@ -110,11 +115,13 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void delete(Long id) {
+        log.info("Deleted question with id " + id);
         questionRepository.deleteById(id);
     }
 
     @Override
     public QuestionDto getById(Long id) {
+        log.info("Found question with id " + id);
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with id = %s not found!", id)));
         return QuestionMapper.INSTANCE.mapToDto(question);

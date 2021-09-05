@@ -10,6 +10,7 @@ import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.StatisticsService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @Data
+@Slf4j
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
     private final BinanceApiWebSocketClient webSocketClient;
@@ -32,10 +34,13 @@ public class StatisticsServiceImpl implements StatisticsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         List<Statistics> statistics = statisticsRepository.findAllByUser(user);
-        if (statistics.size() == 0)
+        if (statistics.size() == 0) {
+            log.info("Pl = " + 0.0);
             return 0.0;
+        }
         Double totalPL = statistics.stream().map(Statistics::getPl).reduce(Double::sum)
                 .orElseThrow(() -> new EntityNotFoundException("No PL"));
+        log.info("Pl = " + totalPL/statistics.size());
         return totalPL/statistics.size();
     }
 }

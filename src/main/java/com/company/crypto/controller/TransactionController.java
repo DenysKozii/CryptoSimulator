@@ -4,6 +4,7 @@ import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@Slf4j
 @RequestMapping("/transaction")
 public class TransactionController {
     private final TransactionService transactionService;
@@ -20,6 +22,7 @@ public class TransactionController {
 
     @GetMapping("/list")
     public String getTransactions(Model model) {
+        log.info("Displayed transactions page");
         List<TransactionDto> transactions = transactionService.getAllByUser();
         model.addAttribute("transactions", transactions);
         return "transactions";
@@ -31,9 +34,11 @@ public class TransactionController {
                                  Model model) {
         OrderInfoDto orderInfoDto;
         if (symbol != null) {
+            log.info("Displayed prices for " + symbol);
             orderInfoDto = transactionService.getOrderInfo(symbol);
             model.addAttribute("symbol", symbol);
         } else {
+            log.info("Displayed prices for " + symbolVariable);
             orderInfoDto = transactionService.getOrderInfo(symbolVariable);
             model.addAttribute("symbol", symbolVariable);
         }

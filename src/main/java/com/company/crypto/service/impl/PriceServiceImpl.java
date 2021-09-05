@@ -22,6 +22,7 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public List<PriceDto> getAll() {
+        log.info("Showed all prices");
         List<Price> priceList = priceRepository.findAll();
         return priceList.stream()
                 .map(PriceMapper.INSTANCE::mapToDto)
