@@ -96,7 +96,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", user.getQuestionOrderId())));
         user.setQuestionOrderId(user.getQuestionOrderId() + 1);
         userRepository.save(user);
-        log.info("Showed next question with title " + question.getTitle());
+        log.info("Showed next question to " + username +  " with title " + question.getTitle());
         return QuestionMapper.INSTANCE.mapToDto(question);
     }
 

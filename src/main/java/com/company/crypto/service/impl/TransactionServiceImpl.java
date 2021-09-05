@@ -42,7 +42,7 @@ public class TransactionServiceImpl implements TransactionService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         if (usdt > user.getUsdt()) {
-            log.error("User haven't enough usdt");
+            log.error(username + " haven't enough usdt");
             return false;
         }
         Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
@@ -100,9 +100,10 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() ->
                         new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
                                 symbol, username)));
-        if (amount > asset.getAmount())
+        if (amount > asset.getAmount()) {
+            log.info(username + " haven't enough amount of " + symbol);
             return false;
-
+        }
         Price price = priceRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol)));

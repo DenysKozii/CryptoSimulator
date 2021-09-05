@@ -9,10 +9,12 @@ import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.service.TradingService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Data
+@Slf4j
 @RequiredArgsConstructor
 public class TradingServiceImpl implements TradingService {
     private final BinanceApiWebSocketClient webSocketClient;
@@ -20,6 +22,7 @@ public class TradingServiceImpl implements TradingService {
 
     @Override
     public void startTrading() {
+        log.info("Trading started");
         for (Symbols symbols: Symbols.values()) {
             webSocketClient.onCandlestickEvent(symbols.name().toLowerCase(), CandlestickInterval.ONE_MINUTE, this::saveResponse);
         }
