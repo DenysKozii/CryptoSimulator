@@ -51,11 +51,23 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol)));
         double close = price.getPrice();
-        double deltaUSDT = -usdt + usdt * TAX;
-        double deltaAmount = -deltaUSDT / close;
-        if (deltaAmount > price.getMinimum()) {
-            user.setUsdt(user.getUsdt() - usdt);
-            asset.setAmount(asset.getAmount() + deltaAmount);
+        double deltaUSDT;
+        double deltaAmount;
+        if (usdt != 0.0) {
+            deltaUSDT = -usdt + usdt * TAX;
+            deltaAmount = -deltaUSDT / close;
+            if (deltaAmount > price.getMinimum()) {
+                user.setUsdt(user.getUsdt() - usdt);
+                asset.setAmount(asset.getAmount() + deltaAmount);
+            }
+        } else {
+            deltaAmount = amount;
+            usdt = amount * close;
+            deltaUSDT = -usdt - usdt * TAX;
+            if (deltaAmount > price.getMinimum()) {
+                user.setUsdt(user.getUsdt() + deltaUSDT);
+                asset.setAmount(asset.getAmount() - deltaAmount);
+            }
         }
         Transaction transaction = new Transaction();
         transaction.setSymbol(symbol);
@@ -87,10 +99,22 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol)));
         double close = price.getPrice();
-        double deltaAmount = amount * close;
-        if (amount > price.getMinimum()) {
-            user.setUsdt(user.getUsdt() + deltaAmount - deltaAmount * TAX);
-            asset.setAmount(asset.getAmount() - amount);
+
+        double deltaUSDT;
+        double deltaAmount;
+        if (amount != 0.0) {
+            deltaAmount = amount * close;
+            if (amount > price.getMinimum()) {
+                user.setUsdt(user.getUsdt() + deltaAmount - deltaAmount * TAX);
+                asset.setAmount(asset.getAmount() - amount);
+            }
+        } else {
+            deltaUSDT = usdt - usdt * TAX;
+            deltaAmount = deltaUSDT / close;
+            if (deltaAmount > price.getMinimum()) {
+                user.setUsdt(user.getUsdt() + usdt);
+                asset.setAmount(asset.getAmount() + deltaAmount);
+            }
         }
         Transaction transaction = new Transaction();
         transaction.setSymbol(symbol);
@@ -142,7 +166,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Double amount = assetRepository.findFirstByUserAndSymbol(user, symbol)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
-                                symbol, username)))
+                        symbol, username)))
                 .getAmount();
 
         Double availableUsdt = user.getUsdt();
