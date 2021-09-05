@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUser(String username) {
         Optional<User> userFromDb = userRepository.findByUsername(username);
-        log.info("Added user with " + username + " username");
+        log.info(String.format("Added user with %s username", username));
         User user;
         if (userFromDb.isPresent()) {
             user = userFromDb.get();
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         user.setUsdt(user.getUsdt() + usdt);
-        log.info("Added " + usdt + " usdt to " + username);
+        log.info(String.format("Added %s usdt to %s", usdt, username));
         userRepository.save(user);
         return true;
     }
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserProfile() {
         String username = authorizationService.getProfileOfCurrent().getUsername();
-        log.info("Showed " + username + " profile");
+        log.info(String.format("Showed %s profile",username));
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         UserDto userDto = new UserDto();

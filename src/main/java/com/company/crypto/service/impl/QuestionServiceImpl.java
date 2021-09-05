@@ -49,7 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
         changeOrderId(orderId + 1);
-        log.info("Changed order id to " + orderId+1);
+        log.info(String.format("Changed order id to %s", orderId + 1));
         question.setOrderId(orderId + 1);
         questionRepository.save(question);
     }
@@ -82,7 +82,7 @@ public class QuestionServiceImpl implements QuestionService {
                 question.setImageAnswer(Base64.getEncoder().encodeToString(imageAnswer.getBytes()));
             }
         }
-        log.info("Created new question with title " + title);
+        log.info(String.format("Created new question with title %s", title));
         questionRepository.save(question);
         return true;
     }
@@ -96,13 +96,13 @@ public class QuestionServiceImpl implements QuestionService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", user.getQuestionOrderId())));
         user.setQuestionOrderId(user.getQuestionOrderId() + 1);
         userRepository.save(user);
-        log.info("Showed next question to " + username +  " with title " + question.getTitle());
+        log.info(String.format("Showed next question to %s with title %s",username,question.getTitle()));
         return QuestionMapper.INSTANCE.mapToDto(question);
     }
 
     @Override
     public QuestionDto answer(Long orderId, Double answer) {
-        log.info("Answer = " + answer);
+        log.info(String.format("Answer = %s", answer));
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));
         QuestionDto questionDto = QuestionMapper.INSTANCE.mapToDto(question);
@@ -115,13 +115,13 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void delete(Long id) {
-        log.info("Deleted question with id " + id);
+        log.info(String.format("Deleted question with id %s", id));
         questionRepository.deleteById(id);
     }
 
     @Override
     public QuestionDto getById(Long id) {
-        log.info("Found question with id " + id);
+        log.info(String.format("Found question with id %s", id));
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with id = %s not found!", id)));
         return QuestionMapper.INSTANCE.mapToDto(question);

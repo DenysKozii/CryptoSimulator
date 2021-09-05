@@ -27,7 +27,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public void authorizeUser(User user) {
-        log.info("User with " + user.getUsername() + " authorized");
+        log.info(String.format("User with %s authorized", user.getUsername()));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 user.getId(), user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString())));
@@ -41,8 +41,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         Long userId = Long.valueOf(principal instanceof UserDetails ?
                 ((UserDetails)principal).getUsername() : principal.toString());
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
-        log.info("Current user with id " + userId);
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with id %s not found",userId)));
         return new UserProfileDto(
                 user.getId(),
                 user.getUsername()
@@ -51,7 +50,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Loaded user with username " + username);
+        log.info(String.format("Loaded user with username %s ", username));
         User user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User with username %s not found!", username))
         );

@@ -42,7 +42,7 @@ public class TransactionServiceImpl implements TransactionService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         if (usdt > user.getUsdt()) {
-            log.error(username + " haven't enough usdt");
+            log.error(String.format("%s haven't enough usdt", username));
             return false;
         }
         Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
@@ -79,11 +79,12 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAction(Action.BUY);
         transaction.setUser(user);
 
-        log.info(transaction.getAction() + " "
-                + transaction.getAmount() + " "
-                + symbol + " by "
-                + username + " on "
-                + transaction.getUsdt());
+        log.info(String.format("%s %s %s by %s on %s",
+                transaction.getAction(),
+                transaction.getAmount(),
+                symbol,
+                username,
+                transaction.getUsdt()));
 
         assetRepository.save(asset);
         userRepository.save(user);
@@ -133,11 +134,12 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAction(Action.SELL);
         transaction.setUser(user);
 
-        log.info(transaction.getAction() + " "
-                + transaction.getAmount() + " "
-                + symbol + " on "
-                + username + " by "
-                + transaction.getUsdt());
+        log.info(String.format("%s %s %s by %s on %s",
+                transaction.getAction(),
+                transaction.getAmount(),
+                symbol,
+                username,
+                transaction.getUsdt()));
 
         assetRepository.save(asset);
         userRepository.save(user);
@@ -147,13 +149,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public boolean buyStop(String symbol, Double amount, Double stop) {
-        log.info("Buy stop " + symbol + " " + stop);
+        log.info(String.format("Buy stop %s %s", symbol, stop));
         return false;
     }
 
     @Override
     public boolean sellStop(String symbol, Double amount, Double stop) {
-        log.info("Sell stop " + symbol + " " + stop);
+        log.info(String.format("Sell stop %s %s", symbol, stop));
         return false;
     }
 
@@ -163,7 +165,7 @@ public class TransactionServiceImpl implements TransactionService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         List<Transaction> transactions = transactionRepository.findAllByUser(user);
-        log.info("Showed statistic on " + username);
+        log.info(String.format("Showed statistic on %s", username));
         return transactions.stream()
                 .map(TransactionMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
@@ -171,7 +173,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public OrderInfoDto getOrderInfo(String symbol) {
-        log.info("Showed info on " + symbol);
+        log.info(String.format("Showed info on %s", symbol));
         OrderInfoDto orderInfoDto = new OrderInfoDto();
 
         String username = authorizationService.getProfileOfCurrent().getUsername();

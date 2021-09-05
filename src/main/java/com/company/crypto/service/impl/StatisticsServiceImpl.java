@@ -35,12 +35,13 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         List<Statistics> statistics = statisticsRepository.findAllByUser(user);
         if (statistics.size() == 0) {
-            log.info(username+ " Pl = " + 0.0);
+            log.info(String.format("%s PL = %s",username,0.0));
             return 0.0;
         }
         Double totalPL = statistics.stream().map(Statistics::getPl).reduce(Double::sum)
                 .orElseThrow(() -> new EntityNotFoundException("No PL"));
-        log.info(username+" Pl = " + totalPL/statistics.size());
+        log.info(String.format("%s PL = %s",username,totalPL/statistics.size()));
+
         return totalPL/statistics.size();
     }
 }
