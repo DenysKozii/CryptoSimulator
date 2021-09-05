@@ -21,9 +21,9 @@ public class TransactionController {
     private final static String BUY = "buy";
 
     @GetMapping("/list")
-    public String getTransactions(Model model) {
+    public String getTransactions(@RequestParam(required = false) String username, Model model) {
         log.info("Displayed transactions page");
-        List<TransactionDto> transactions = transactionService.getAllByUser();
+        List<TransactionDto> transactions = transactionService.getAllByUser(username);
         model.addAttribute("transactions", transactions);
         return "transactions";
     }

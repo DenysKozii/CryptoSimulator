@@ -25,6 +25,8 @@ public class UserDto extends BaseDto {
 
     private Double usdt;
 
+    private Double pnl;
+
     private Double assetsTotal;
 
     private List<AssetDto> assets;

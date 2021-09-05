@@ -15,7 +15,7 @@ public interface TransactionService {
 
     boolean sellStop(String symbol, Double amount, Double stop);
 
-    List<TransactionDto> getAllByUser();
+    List<TransactionDto> getAllByUser(String username);
 
     OrderInfoDto getOrderInfo(String symbol);
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,10 +46,17 @@ public class TransactionServiceImpl implements TransactionService {
             log.error(String.format("%s haven't enough usdt", username));
             return false;
         }
-        Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
-                .orElseThrow(() ->
-                        new EntityNotFoundException(String.format("Asset with symbol %s for user %s does not exists!",
-                                symbol, username)));
+        Optional<Asset> assetOptional = assetRepository.findFirstByUserAndSymbol(user, symbol);
+        Asset asset;
+        if (assetOptional.isPresent()){
+            asset = assetOptional.get();
+        } else {
+            asset = new Asset();
+            asset.setAmount(0.0);
+            asset.setSymbol(symbol);
+            asset.setUser(user);
+            assetRepository.save(asset);
+        }
         Price price = priceRepository.findBySymbol(symbol)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Price with symbol %s does not exists!",
                         symbol)));
@@ -160,18 +168,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> getAllByUser() {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
-        List<Transaction> transactions = transactionRepository.findAllByUser(user);
-        log.info(String.format("Showed statistic on %s", username));
-        return transactions.stream()
-                .map(TransactionMapper.INSTANCE::mapToDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public OrderInfoDto getOrderInfo(String symbol) {
         log.info(String.format("Showed info on %s", symbol));
         OrderInfoDto orderInfoDto = new OrderInfoDto();
@@ -196,5 +192,18 @@ public class TransactionServiceImpl implements TransactionService {
         orderInfoDto.setAmount(amount);
         orderInfoDto.setAvailableUsdt(availableUsdt);
         return orderInfoDto;
+    }
+
+    @Override
+    public List<TransactionDto> getAllByUser(String username) {
+        if (username == null)
+            username = authorizationService.getProfileOfCurrent().getUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
+        List<Transaction> transactions = transactionRepository.findAllByUser(user);
+        log.info(String.format("Showed statistics on %s", username));
+        return transactions.stream()
+                .map(TransactionMapper.INSTANCE::mapToDto)
+                .collect(Collectors.toList());
     }
 }

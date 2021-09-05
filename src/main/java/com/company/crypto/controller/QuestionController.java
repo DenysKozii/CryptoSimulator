@@ -53,7 +53,7 @@ public class QuestionController {
     @PostMapping("/answer/{orderId}")
     public String answerQuestion(
             @PathVariable Long orderId,
-            @RequestParam Double answer,
+            @RequestParam(defaultValue = "0.0") Double answer,
             Model model) {
         log.info("Displayed page with question result");
         QuestionDto question = questionService.answer(orderId, answer);

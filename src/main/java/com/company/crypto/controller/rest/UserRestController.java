@@ -5,6 +5,8 @@ import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserRestController {
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/login")
     public UserDto addUser(@RequestParam String username) {
         userService.addUser(username);
         return userService.getUserProfile();
@@ -21,6 +23,11 @@ public class UserRestController {
     @GetMapping("/profile")
     public UserDto profile() {
         return userService.getUserProfile();
+    }
+
+    @GetMapping("/rating")
+    public List<UserDto> ratingList() {
+        return userService.getRatingList();
     }
 
     @PostMapping("/add")

@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .authorizeRequests()
-                    .antMatchers("/", "/api/v1").permitAll()
+                    .antMatchers("/", "/api/v1/login").permitAll()
                     .antMatchers(SWAGGER_WHITELIST).permitAll()
                     .anyRequest().authenticated();
             http

@@ -22,7 +22,7 @@ public class QuestionRestController {
 
     @PostMapping("/answer/{orderId}")
     public QuestionDto answerQuestion(@PathVariable Long orderId,
-                                      @RequestParam Double answer) {
+                                      @RequestParam(defaultValue = "0.0") Double answer) {
         return questionService.answer(orderId, answer);
     }
 
