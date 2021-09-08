@@ -4,7 +4,6 @@ import com.company.crypto.dto.PriceDto;
 import com.company.crypto.entity.Price;
 import com.company.crypto.mapper.PriceMapper;
 import com.company.crypto.repository.PriceRepository;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.PriceService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

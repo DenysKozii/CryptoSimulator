@@ -2,7 +2,7 @@ package com.company.crypto.jwt;
 
 
 import com.company.crypto.entity.User;
-import com.company.crypto.service.AuthorizationService;
+import com.company.crypto.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class JwtFilter extends GenericFilterBean {
     private JwtProvider jwtProvider;
 
     @Autowired
-    private AuthorizationService userService;
+    private UserServiceImpl userService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

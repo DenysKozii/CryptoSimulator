@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface TransactionService {
 
-    boolean buy(String symbol, Double usdt, Double amount);
+    boolean buy(String username, String symbol, Double usdt, Double amount);
 
-    boolean sell(String symbol, Double usdt, Double amount);
+    boolean sell(String username, String symbol, Double usdt, Double amount);
 
-    boolean buyStop(String symbol, Double amount, Double stop);
+    boolean buyStop(String username, String symbol, Double amount, Double stop);
 
-    boolean sellStop(String symbol, Double amount, Double stop);
+    boolean sellStop(String username, String symbol, Double amount, Double stop);
 
-    List<TransactionDto> getAllByUser(String username);
+    OrderInfoDto getOrderInfo(String username, String symbol);
 
-    OrderInfoDto getOrderInfo(String symbol);
+    List<TransactionDto> getAllByUser(String username, String currentUsername);
 }

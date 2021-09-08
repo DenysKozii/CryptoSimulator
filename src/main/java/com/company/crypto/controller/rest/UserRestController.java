@@ -1,19 +1,22 @@
 package com.company.crypto.controller.rest;
 
 import com.company.crypto.dto.AddUsdtDto;
-import com.company.crypto.dto.UserRequest;
+import com.company.crypto.dto.LoginRequest;
 import com.company.crypto.dto.UserDto;
+import com.company.crypto.entity.User;
 import com.company.crypto.jwt.JwtProvider;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -25,7 +28,7 @@ public class UserRestController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         userService.login(loginRequest.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwtProvider.generateToken(loginRequest.getUsername()));
@@ -33,8 +36,8 @@ public class UserRestController {
     }
 
     @GetMapping("/profile")
-    public UserDto profile() {
-        return userService.getUserProfile();
+    public UserDto profile(@AuthenticationPrincipal User user) {
+        return userService.getUserProfile(user.getUsername());
     }
 
     @GetMapping("/rating")
@@ -43,9 +46,9 @@ public class UserRestController {
     }
 
     @PostMapping("/add/usdt")
-    public UserDto addUsdt(@RequestBody AddUsdtDto usdt) {
-        userService.addUsdt(usdt.getUsdt());
-        return userService.getUserProfile();
+    public UserDto addUsdt(@RequestBody AddUsdtDto usdt, @AuthenticationPrincipal User user) {
+        userService.addUsdt(usdt.getUsdt(), user.getUsername());
+        return userService.getUserProfile(user.getUsername());
     }
 
 //    @PostMapping("/registration")

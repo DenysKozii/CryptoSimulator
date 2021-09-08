@@ -6,7 +6,6 @@ import com.company.crypto.entity.User;
 import com.company.crypto.mapper.QuestionMapper;
 import com.company.crypto.repository.QuestionRepository;
 import com.company.crypto.repository.UserRepository;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.QuestionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
 
-    private final AuthorizationService authorizationService;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
@@ -88,8 +86,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto getNext() throws EntityNotFoundException {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public QuestionDto getNext(String username) throws EntityNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         Question question = questionRepository.findByOrderId(user.getQuestionOrderId())
@@ -101,7 +98,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto answer(Long orderId, Double answer) {
+    public QuestionDto answer(String username, Long orderId, Double answer) {
         log.info(String.format("Answer = %s", answer));
         Question question = questionRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Question with order id = %s not found!", orderId)));

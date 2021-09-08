@@ -10,10 +10,11 @@ import com.company.crypto.mapper.UserMapper;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.repository.UserRepository;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,10 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
-    private final AuthorizationService authorizationService;
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
-    private final PasswordEncoder passwordEncoder;
     private final PriceRepository priceRepository;
 
     private final static Double START_USDT = 1000.0;
@@ -50,26 +49,26 @@ public class UserServiceImpl implements UserService {
             user = new User();
             user.setRole(Role.USER);
             user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(username));
+            user.setPassword(username);
             user.setUsdt(START_USDT);
             user.setQuestionOrderId(1L);
             user.setPnl(0.0);
             userRepository.save(user);
-//            for (Symbols symbols : Symbols.values()) {
-//                Asset asset = new Asset();
-//                asset.setAmount(0.0);
-//                asset.setSymbol(symbols.name());
-//                asset.setUser(user);
-//                assetRepository.save(asset);
-//            }
+            for (Symbols symbols : Symbols.values()) {
+                Asset asset = new Asset();
+                asset.setAmount(0.0);
+                asset.setSymbol(symbols.name());
+                asset.setUser(user);
+                assetRepository.save(asset);
+            }
         }
-        authorizationService.authorizeUser(user);
+//        authorizationService.authorizeUser(user);
         return true;
     }
 
     @Transactional
-    public boolean addUsdt(Double usdt) {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public boolean addUsdt(Double usdt, String username) {
+//        String username = authorizationService.getProfileOfCurrent().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         user.setUsdt(user.getUsdt() + usdt);
@@ -79,8 +78,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserProfile() {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public UserDto getUserProfile(String username) {
+//        String username = authorizationService.getProfileOfCurrent().getUsername();
         log.info(String.format("Showed %s profile",username));
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
@@ -130,5 +129,11 @@ public class UserServiceImpl implements UserService {
                 .amount(asset.getAmount())
                 .sum(asset.getAmount() * price)
                 .build();
+    }
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " doesn't exists!"));
     }
 }

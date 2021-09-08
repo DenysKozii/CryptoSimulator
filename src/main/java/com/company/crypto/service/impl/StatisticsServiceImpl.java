@@ -1,12 +1,10 @@
 package com.company.crypto.service.impl;
 
 import com.binance.api.client.BinanceApiWebSocketClient;
-import com.company.crypto.dto.TransactionDto;
 import com.company.crypto.entity.Statistics;
 import com.company.crypto.entity.User;
 import com.company.crypto.repository.StatisticsRepository;
 import com.company.crypto.repository.UserRepository;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.StatisticsService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +21,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
     private final BinanceApiWebSocketClient webSocketClient;
-    private final AuthorizationService authorizationService;
     private final StatisticsRepository statisticsRepository;
     private final UserRepository userRepository;
 
 
     @Override
-    public Double calculatePNL() {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public Double calculatePNL(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         List<Statistics> statistics = statisticsRepository.findAllByUser(user);

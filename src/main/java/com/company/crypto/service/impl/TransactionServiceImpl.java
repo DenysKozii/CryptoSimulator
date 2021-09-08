@@ -12,7 +12,6 @@ import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
 import com.company.crypto.repository.TransactionRepository;
 import com.company.crypto.repository.UserRepository;
-import com.company.crypto.service.AuthorizationService;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-    private final AuthorizationService authorizationService;
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
@@ -38,8 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final static Double TAX = 0.00075;
 
     @Override
-    public boolean buy(String symbol, Double usdt, Double amount) {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public boolean buy(String username, String symbol, Double usdt, Double amount) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         if (usdt > user.getUsdt()) {
@@ -101,8 +98,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public boolean sell(String symbol, Double usdt, Double amount) {
-        String username = authorizationService.getProfileOfCurrent().getUsername();
+    public boolean sell(String username, String symbol, Double usdt, Double amount) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         Asset asset = assetRepository.findFirstByUserAndSymbol(user, symbol)
@@ -156,23 +152,22 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public boolean buyStop(String symbol, Double amount, Double stop) {
+    public boolean buyStop(String username, String symbol, Double amount, Double stop) {
         log.info(String.format("Buy stop %s %s", symbol, stop));
         return false;
     }
 
     @Override
-    public boolean sellStop(String symbol, Double amount, Double stop) {
+    public boolean sellStop(String username, String symbol, Double amount, Double stop) {
         log.info(String.format("Sell stop %s %s", symbol, stop));
         return false;
     }
 
     @Override
-    public OrderInfoDto getOrderInfo(String symbol) {
-        log.info(String.format("Showed info on %s", symbol));
+    public OrderInfoDto getOrderInfo(String username, String symbol) {
+        log.info(String.format("Show info on %s for %s", symbol, username));
         OrderInfoDto orderInfoDto = new OrderInfoDto();
 
-        String username = authorizationService.getProfileOfCurrent().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
 
@@ -195,13 +190,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> getAllByUser(String username) {
+    public List<TransactionDto> getAllByUser(String username, String currentUsername) {
         if (username == null)
-            username = authorizationService.getProfileOfCurrent().getUsername();
+            username = currentUsername;
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid Credentials"));
         List<Transaction> transactions = transactionRepository.findAllByUser(user);
-        log.info(String.format("Showed statistics on %s", username));
+        log.info(String.format("Show transactions for %s", username));
         return transactions.stream()
                 .map(TransactionMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());

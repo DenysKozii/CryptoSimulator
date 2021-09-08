@@ -3,14 +3,14 @@ package com.company.crypto.controller.rest;
 import com.company.crypto.dto.OrderDto;
 import com.company.crypto.dto.OrderInfoDto;
 import com.company.crypto.dto.TransactionDto;
-import com.company.crypto.dto.UserRequest;
+import com.company.crypto.dto.LoginRequest;
+import com.company.crypto.entity.User;
 import com.company.crypto.enums.Action;
-import com.company.crypto.enums.Symbols;
 import com.company.crypto.service.TransactionService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,33 +20,40 @@ import java.util.List;
 public class TransactionRestController {
     private final TransactionService transactionService;
 
-    private final static String BUY = "buy";
     private final static String BTCUSDT = "BTCUSDT";
 
-    @GetMapping("/list")
-    public List<TransactionDto> getUserTransactions(@RequestBody UserRequest user) {
-        return transactionService.getAllByUser(user.getUsername());
+    @PostMapping("/list")
+    public List<TransactionDto> getUserTransactions(@RequestBody LoginRequest loginRequest,
+                                                    @AuthenticationPrincipal User user) {
+        return transactionService.getAllByUser(loginRequest.getUsername(), user.getUsername());
     }
 
     @GetMapping("/order")
-    public OrderInfoDto getOrderInfo(@RequestParam(defaultValue = BTCUSDT) Symbols symbol) {
-        return transactionService.getOrderInfo(symbol.getValue());
+    public OrderInfoDto getOrderInfo(@RequestParam String symbol,
+                                     @AuthenticationPrincipal User user) {
+        try {
+            return transactionService.getOrderInfo(user.getUsername(), symbol);
+        } catch (Exception e){
+            return transactionService.getOrderInfo(user.getUsername(), BTCUSDT);
+        }
     }
 
     @PostMapping("/order/submit")
-    public boolean submitOrder(@Valid OrderDto order) {
+    public boolean submitOrder(@RequestBody OrderDto order,
+                               @AuthenticationPrincipal User user) {
         if (Action.BUY.equals(order.getOrder()))
-            return transactionService.buy(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
+            return transactionService.buy(user.getUsername(),order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
         else
-            return transactionService.sell(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
+            return transactionService.sell(user.getUsername(),order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
     }
 
     @PostMapping("/stop/submit")
-    public boolean submitStop(@Valid OrderDto order) {
+    public boolean submitStop(@RequestBody OrderDto order,
+                              @AuthenticationPrincipal User user) {
         if (Action.BUY.equals(order.getOrder()))
-            return transactionService.buy(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
+            return transactionService.buy(user.getUsername(),order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
         else
-            return transactionService.sell(order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
+            return transactionService.sell(user.getUsername(),order.getSymbol().getValue(), order.getUsdt(), order.getAmount());
     }
 
 }

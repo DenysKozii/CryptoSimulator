@@ -2,6 +2,6 @@ package com.company.crypto.service;
 
 public interface StatisticsService {
 
-    Double calculatePNL();
+    Double calculatePNL(String username);
 
 }
