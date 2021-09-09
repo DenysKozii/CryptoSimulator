@@ -25,6 +25,8 @@ public class Transaction extends BaseEntity {
 
     private Action action;
 
+    private boolean analysed;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade= CascadeType.ALL)

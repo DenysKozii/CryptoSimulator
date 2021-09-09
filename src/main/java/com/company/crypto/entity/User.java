@@ -36,6 +36,8 @@ public class User extends BaseEntity implements UserDetails {
 
     private Double pnl;
 
+    private Integer pnlUpdates;
+
     @Column(name = "question_order_id")
     private Long questionOrderId;
 

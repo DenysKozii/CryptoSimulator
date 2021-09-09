@@ -8,5 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long>, PagingAndSortingRepository<Transaction, Long> {
+    List<Transaction> findAllByUserAndSymbolAndAnalysedFalse(User user, String symbol);
+
     List<Transaction> findAllByUser(User user);
 }

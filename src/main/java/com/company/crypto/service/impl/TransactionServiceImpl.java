@@ -7,6 +7,7 @@ import com.company.crypto.entity.Price;
 import com.company.crypto.entity.Transaction;
 import com.company.crypto.entity.User;
 import com.company.crypto.enums.Action;
+import com.company.crypto.enums.Symbols;
 import com.company.crypto.mapper.TransactionMapper;
 import com.company.crypto.repository.AssetRepository;
 import com.company.crypto.repository.PriceRepository;
@@ -83,6 +84,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setUsdt(usdt);
         transaction.setAction(Action.BUY);
         transaction.setUser(user);
+        user.getTransactions().add(transaction);
 
         log.info(String.format("%s %s %s by %s on %s",
                 transaction.getAction(),
@@ -137,6 +139,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setUsdt(deltaAmount);
         transaction.setAction(Action.SELL);
         transaction.setUser(user);
+        user.getTransactions().add(transaction);
 
         log.info(String.format("%s %s %s by %s on %s",
                 transaction.getAction(),

@@ -14,4 +14,7 @@ public interface UserService {
     UserDto getUserProfile(String username);
 
     List<UserDto> getRatingList();
+
+    void calculatePL();
+
 }

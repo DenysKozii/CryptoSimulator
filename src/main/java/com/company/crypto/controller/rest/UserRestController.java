@@ -1,7 +1,7 @@
 package com.company.crypto.controller.rest;
 
 import com.company.crypto.dto.AddUsdtDto;
-import com.company.crypto.dto.LoginRequest;
+import com.company.crypto.dto.UserRequest;
 import com.company.crypto.dto.UserDto;
 import com.company.crypto.entity.User;
 import com.company.crypto.jwt.JwtProvider;
@@ -28,7 +28,7 @@ public class UserRestController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody UserRequest loginRequest) {
         userService.login(loginRequest.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwtProvider.generateToken(loginRequest.getUsername()));

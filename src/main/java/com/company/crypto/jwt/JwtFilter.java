@@ -20,11 +20,6 @@ import java.io.IOException;
 
 import static org.springframework.util.StringUtils.hasText;
 
-/**
- * Date: 07.09.2020
- *
- * @author Denys Kozii
- */
 @Component
 public class JwtFilter extends GenericFilterBean {
 
@@ -42,7 +37,6 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        logger.info("**doFilter Start");
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if ((token != null) && jwtProvider.validateToken(token)) {
             String login = jwtProvider.getLoginFromToken(token);
@@ -53,7 +47,6 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(servletRequest, servletResponse);
-        logger.info("**doFilter done");
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
