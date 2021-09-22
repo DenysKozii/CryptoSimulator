@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class UserRequest {
-    @NotNull(message = "Username is required.")
+
     private String username;
+
 }

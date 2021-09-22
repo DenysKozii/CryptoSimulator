@@ -45,7 +45,7 @@ public class UserRestController {
         return userService.getRatingList();
     }
 
-    @PostMapping("/add/usdt")
+    @PatchMapping("/addUsdt")
     public UserDto addUsdt(@RequestBody AddUsdtDto usdt, @AuthenticationPrincipal User user) {
         userService.addUsdt(usdt.getUsdt(), user.getUsername());
         return userService.getUserProfile(user.getUsername());
